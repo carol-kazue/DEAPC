@@ -1,0 +1,107 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { font-family: sans-serif; color: #222; background: #fff; }
+
+/* ── NAV ── */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #d9d9d9;
+  padding: 0 2.5rem;
+  height: 70px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.nav-left  { display: flex; align-items: center; gap: 1rem; }
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.nav-brand { font-weight: bold; font-size: 1.1rem; color: #222; text-decoration: none; }
+.nav-icon  { background: none; border: none; cursor: pointer; color: #222; line-height: 0; display: inline-flex; }
+
+.btn-pill {
+  background: #5c5c5c;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.42rem 1.2rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+}
+.btn-pill:hover { background: #3a3a3a; }
+
+/* ── PAGE WRAPPER ── */
+.page { padding: 2rem 4rem; max-width: 1200px; margin: 0 auto; }
+.page-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 1.2rem; }
+
+/* ── IMAGE PLACEHOLDER ── */
+.img-box {
+  width: 100%;
+  background-color: #d0d0d0;
+  background-image:
+    linear-gradient(to bottom right, transparent calc(50% - 1px), #b4b4b4 calc(50% - 1px), #b4b4b4 calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(to bottom left,  transparent calc(50% - 1px), #b4b4b4 calc(50% - 1px), #b4b4b4 calc(50% + 1px), transparent calc(50% + 1px));
+}
+.img-box-md { height: 200px; }
+
+/* ── BUTTONS ── */
+.btn {
+  background: #5c5c5c;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.42rem 1.3rem;
+  font-size: 0.92rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+}
+.btn:hover { background: #3a3a3a; }
+.btn-sm    { padding: 0.28rem 0.85rem; font-size: 0.82rem; }
+
+/* ── FORMS (search bar) ── */
+.form-group        { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 1rem; }
+.form-group label  { font-size: 0.88rem; font-weight: 600; }
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+select {
+  border: 1px solid #bbb;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.92rem;
+  background: #f5f5f5;
+  width: 100%;
+  font-family: inherit;
+  border-radius: 2px;
+}
+
+/* ── SEARCH BAR ── */
+.search-bar {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-end;
+  background: #ececec;
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.search-bar .form-group { margin-bottom: 0; flex: 1; min-width: 120px; }
+
+/* ── EVENT CARDS GRID ── */
+.cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.card { background: #d9d9d9; padding: 1rem; }
+.card-title  { font-size: 0.97rem; font-weight: bold; margin: 0.6rem 0 0.2rem; }
+.card-meta   { font-size: 0.82rem; color: #555; }
+.card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 0.9rem; }
+.card-price  { font-weight: bold; font-size: 0.95rem; }
+
+/* ── PAGINATION ── */
+.pagination { display: flex; gap: 0.4rem; justify-content: center; margin-top: 2rem; }
+.pg-btn { width: 30px; height: 30px; border: 1px solid #aaa; background: #fff; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; }
+.pg-btn.active { background: #5c5c5c; color: #fff; border-color: #5c5c5c; }
