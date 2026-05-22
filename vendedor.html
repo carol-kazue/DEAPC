@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Balcão — Casa da Música</title>
+  <link rel="stylesheet" href="styles/vendedor.css" />
+</head>
+<body>
+
+  <nav class="nav-vendor">
+    <div class="nav-left">
+      <a href="vendedor.html" class="nav-brand">Casa da Música — Balcão</a>
+    </div>
+    <div class="nav-right">
+      <span class="text-sm" style="margin-right:0.5rem;">Vendedor: João Pereira</span>
+      <a href="login.html" class="btn-pill">Sair</a>
+    </div>
+  </nav>
+
+  <main class="page">
+    <h1 class="page-title">Emissão de Bilhetes ao Balcão</h1>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+
+      <!-- Pesquisa de evento -->
+      <div>
+        <h2 style="font-size:1rem; font-weight:bold; margin-bottom:0.8rem;">1. Pesquisar Evento</h2>
+        <div class="search-bar" style="flex-direction:column; align-items:stretch;">
+          <div class="form-group">
+            <label for="pesq-evento">Nome do evento ou data</label>
+            <input type="text" id="pesq-evento" placeholder="Ex: Concerto Sinfónico..." />
+          </div>
+          <div class="form-group">
+            <label for="pesq-data">Data</label>
+            <input type="date" id="pesq-data" />
+          </div>
+          <button class="btn">Pesquisar</button>
+        </div>
+
+        <!-- Resultados -->
+        <h2 style="font-size:1rem; font-weight:bold; margin-bottom:0.8rem;">Resultados</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Evento</th>
+                <th>Data</th>
+                <th>Sala</th>
+                <th>Disponível</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Concerto Sinfónico n.º 12</td>
+                <td>15 Jun 2026</td>
+                <td>Sala Suggia</td>
+                <td>842</td>
+                <td><button class="btn btn-sm">Selecionar</button></td>
+              </tr>
+              <tr>
+                <td>Jazz à Noite</td>
+                <td>22 Jun 2026</td>
+                <td>Sala 2</td>
+                <td>156</td>
+                <td><button class="btn btn-sm">Selecionar</button></td>
+              </tr>
+              <tr>
+                <td>Quarteto de Cordas</td>
+                <td>28 Jun 2026</td>
+                <td>Sala Suggia</td>
+                <td>1028</td>
+                <td><button class="btn btn-sm">Selecionar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Emissão de bilhete -->
+      <div>
+        <h2 style="font-size:1rem; font-weight:bold; margin-bottom:0.8rem;">2. Emitir Bilhete</h2>
+        <div class="form-card">
+          <div class="form-group">
+            <label>Evento selecionado</label>
+            <input type="text" value="Concerto Sinfónico n.º 12 — 15 Jun 2026" readonly style="background:#e8e8e8;" />
+          </div>
+          <div class="form-group">
+            <label for="tipo-bilhete">Tipo de bilhete</label>
+            <select id="tipo-bilhete">
+              <option>Normal — €25,00</option>
+              <option>Jovem — €15,00</option>
+              <option>Sénior — €18,00</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="qty-balcao">Quantidade</label>
+            <input type="number" id="qty-balcao" value="1" min="1" max="10" />
+          </div>
+          <div class="form-group">
+            <label for="pagamento-tipo">Forma de pagamento</label>
+            <select id="pagamento-tipo">
+              <option>Dinheiro</option>
+              <option>Multibanco</option>
+              <option>MB Way</option>
+            </select>
+          </div>
+
+          <div class="order-box mt-1">
+            <div class="order-row order-total"><span>Total a cobrar</span><span>€25,00</span></div>
+          </div>
+
+          <div class="form-actions mt-2">
+            <button class="btn btn-success">Emitir Bilhete</button>
+            <button class="btn">Imprimir</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>
