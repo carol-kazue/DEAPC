@@ -126,3 +126,154 @@ body {
         padding: 48px 16px;
     }
 }
+
+/* ===== MOBILE ===== */
+@media (max-width: 600px) {
+
+  .content {
+    padding: 24px 16px;
+  }
+
+  .login-form {
+    max-width: 100%;
+    gap: 18px;
+  }
+
+  .login-form h3 {
+    text-align: left;
+    font-size: 16px;
+  }
+
+  /* Imagem ocupa largura total */
+  .image-box {
+    width: 100%;
+    height: 140px;
+    border-radius: 10px;
+    background-color: #d9d9d9;
+  }
+
+  /* Inputs mais compactos */
+  .form-group input {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  /* Botão */
+  .submit-button {
+    padding: 10px 24px;
+    font-size: 13px;
+  }
+
+  /* Navbar mais apertada */
+  .navbar {
+    padding: 10px 16px;
+  }
+}
+
+/* ===== DETALHE EVENTO ===== */
+
+.event-container {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.event-image {
+  width: 100%;
+  height: 250px;
+  background-color: #d9d9d9;
+}
+
+.event-description {
+  background-color: #d9d9d9;
+  padding: 16px;
+  font-size: 14px;
+}
+
+.event-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.event-prices {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+}
+
+.event-buy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.tickets {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bar {
+  width: 180px;
+  height: 20px;
+  background-color: #d9d9d9;
+  border-radius: 999px;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantity button {
+  background-color: #d9d9d9;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+/* ===== MOBILE ===== */
+
+@media (max-width: 600px) {
+
+  .event-image {
+    height: 180px;
+  }
+
+  .event-info {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .event-prices {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .event-buy {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .bar {
+    width: 100%;
+  }
+
+  .submit-button {
+    align-self: center;
+  }
+}
+
