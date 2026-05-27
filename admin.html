@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Casa da Música</title>
+  <link rel="stylesheet" href="styles/admin.css" />
+</head>
+<body>
+
+  <nav class="nav-admin">
+    <div class="nav-left">
+      <a href="admin.html" class="nav-brand">Casa da Música — Admin</a>
+      <a href="admin-eventos.html" class="btn-pill">Eventos</a>
+      <a href="admin-relatorios.html" class="btn-pill">Relatórios</a>
+      <a href="admin-utilizadores.html" class="btn-pill">Utilizadores</a>
+    </div>
+    <div class="nav-right">
+      <a href="login.html" class="btn-pill btn-pill-light">Sair</a>
+    </div>
+  </nav>
+
+  <main class="page">
+    <h1 class="page-title">Dashboard</h1>
+
+    <!-- Estatísticas gerais -->
+    <div class="stats-row">
+      <div class="stat">
+        <p class="stat-val">24</p>
+        <p class="stat-lbl">Eventos publicados</p>
+      </div>
+      <div class="stat">
+        <p class="stat-val">1 847</p>
+        <p class="stat-lbl">Bilhetes vendidos</p>
+      </div>
+      <div class="stat">
+        <p class="stat-val">€38 920</p>
+        <p class="stat-lbl">Receita total</p>
+      </div>
+    </div>
+
+    <!-- Acesso rápido -->
+    <div style="display:flex; gap:1rem; margin-bottom:2rem; flex-wrap:wrap;">
+      <a href="admin-evento-editar.html" class="btn">+ Novo Evento</a>
+      <a href="admin-relatorios.html" class="btn btn-pill-light">Ver Relatórios</a>
+      <a href="admin-utilizadores.html" class="btn btn-pill-light">Gerir Utilizadores</a>
+    </div>
+
+    <!-- Eventos recentes -->
+    <div class="sec-header">
+      <h2 style="font-size:1.05rem; font-weight:bold;">Próximos Eventos</h2>
+      <a href="admin-eventos.html" class="btn btn-sm">Ver todos</a>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Data</th>
+            <th>Local</th>
+            <th>Vendidos</th>
+            <th>Lotação</th>
+            <th>Estado</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#101</td>
+            <td>Concerto Sinfónico n.º 12</td>
+            <td>15 Jun 2026</td>
+            <td>Sala Suggia</td>
+            <td>396</td>
+            <td>1238</td>
+            <td><span class="badge badge-green">Publicado</span></td>
+            <td class="col-actions">
+              <a href="admin-evento-editar.html" class="btn btn-sm">Editar</a>
+              <button class="btn btn-sm btn-danger">Cancelar</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#102</td>
+            <td>Jazz à Noite</td>
+            <td>22 Jun 2026</td>
+            <td>Sala 2</td>
+            <td>94</td>
+            <td>250</td>
+            <td><span class="badge badge-green">Publicado</span></td>
+            <td class="col-actions">
+              <a href="admin-evento-editar.html" class="btn btn-sm">Editar</a>
+              <button class="btn btn-sm btn-danger">Cancelar</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#103</td>
+            <td>Quarteto de Cordas</td>
+            <td>28 Jun 2026</td>
+            <td>Sala Suggia</td>
+            <td>210</td>
+            <td>1238</td>
+            <td><span class="badge badge-green">Publicado</span></td>
+            <td class="col-actions">
+              <a href="admin-evento-editar.html" class="btn btn-sm">Editar</a>
+              <button class="btn btn-sm btn-danger">Cancelar</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#104</td>
+            <td>Fado Contemporâneo</td>
+            <td>5 Jul 2026</td>
+            <td>Grande Auditório</td>
+            <td>0</td>
+            <td>2000</td>
+            <td><span class="badge badge-gray">Rascunho</span></td>
+            <td class="col-actions">
+              <a href="admin-evento-editar.html" class="btn btn-sm">Editar</a>
+              <button class="btn btn-sm btn-danger">Cancelar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+</body>
+</html>
