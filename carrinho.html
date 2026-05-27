@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selecionar Bilhetes — Casa da Música</title>
+  <link rel="stylesheet" href="styles/carrinho.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <a href="index.html" class="nav-brand">Casa da Música</a>
+      <a href="eventos.html" class="btn-pill">Eventos</a>
+    </div>
+    <div class="nav-right">
+      <a href="conta.html" class="nav-icon" aria-label="Conta">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.118a7.5 7.5 0 0 1 15 0"/>
+        </svg>
+      </a>
+      <a href="bilhetes.html" class="nav-icon" aria-label="Carrinho">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+        </svg>
+      </a>
+      <a href="login.html" class="btn-pill">Entrar</a>
+    </div>
+  </nav>
+
+  <main class="page" style="max-width:700px;">
+
+    <!-- Indicador de passos -->
+    <div class="steps mt-2 mb-2">
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+    </div>
+    <p class="text-center text-sm mb-2">Passo 1 de 3 — Selecionar Bilhetes</p>
+
+    <!-- Resumo do evento -->
+    <div class="order-box">
+      <p class="text-bold">Concerto Sinfónico n.º 12</p>
+      <p class="text-sm">15 Jun 2026 · 21h00 · Sala Suggia</p>
+    </div>
+
+    <!-- Tabela de seleção -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Descrição</th>
+            <th>Preço unit.</th>
+            <th>Quantidade</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-bold">Normal</td>
+            <td class="text-sm">Tarifa geral</td>
+            <td>€25,00</td>
+            <td>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="change('n',-1)">−</button>
+                <span class="qty-val" id="qty-n">0</span>
+                <button class="qty-btn" onclick="change('n',1)">+</button>
+              </div>
+            </td>
+            <td id="sub-n">€0,00</td>
+          </tr>
+          <tr>
+            <td class="text-bold">Jovem</td>
+            <td class="text-sm">Até 30 anos</td>
+            <td>€15,00</td>
+            <td>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="change('j',-1)">−</button>
+                <span class="qty-val" id="qty-j">0</span>
+                <button class="qty-btn" onclick="change('j',1)">+</button>
+              </div>
+            </td>
+            <td id="sub-j">€0,00</td>
+          </tr>
+          <tr>
+            <td class="text-bold">Sénior</td>
+            <td class="text-sm">Mais de 65 anos</td>
+            <td>€18,00</td>
+            <td>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="change('s',-1)">−</button>
+                <span class="qty-val" id="qty-s">0</span>
+                <button class="qty-btn" onclick="change('s',1)">+</button>
+              </div>
+            </td>
+            <td id="sub-s">€0,00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Total -->
+    <div class="order-box mt-2">
+      <div class="order-row order-total">
+        <span>Total</span>
+        <span id="total">€0,00</span>
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; margin-top:1.5rem;">
+      <a href="evento.html" class="btn btn-pill-light">← Voltar</a>
+      <a href="pagamento.html" class="btn">Continuar →</a>
+    </div>
+  </main>
+
+  <script>
+    const prices = { n: 25, j: 15, s: 18 };
+    const qty    = { n: 0,  j: 0,  s: 0  };
+
+    function change(type, delta) {
+      qty[type] = Math.max(0, qty[type] + delta);
+      document.getElementById('qty-' + type).textContent = qty[type];
+      document.getElementById('sub-' + type).textContent = '€' + (qty[type] * prices[type]).toFixed(2).replace('.', ',');
+      const total = Object.keys(qty).reduce((s, k) => s + qty[k] * prices[k], 0);
+      document.getElementById('total').textContent = '€' + total.toFixed(2).replace('.', ',');
+    }
+  </script>
+
+</body>
+</html>
