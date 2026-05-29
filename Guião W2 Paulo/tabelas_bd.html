@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tabelas BD — Guião W2 Paulo Costa</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 2rem auto; color: #333; }
+    h1   { font-size: 1.3rem; border-bottom: 2px solid #333; padding-bottom: 0.4rem; }
+    h2   { font-size: 1.1rem; margin-top: 2rem; color: #222; }
+    h3   { font-size: 0.95rem; margin-top: 1.2rem; color: #555; }
+    table { border-collapse: collapse; width: 100%; margin-top: 0.6rem; font-size: 0.9rem; }
+    th, td { border: 1px solid #aaa; padding: 6px 10px; text-align: left; }
+    th { background: #eee; }
+    .us { font-style: italic; color: #666; margin-bottom: 0.3rem; }
+    code { background: #f4f4f4; padding: 1px 4px; border-radius: 3px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+<h1>Alínea 3b) — Estruturas de Dados por User Story</h1>
+<p><strong>Projeto:</strong> Bilheteira Online — Casa da Música</p>
+<p><strong>Aluno:</strong> Paulo Costa &nbsp;|&nbsp; <strong>Área:</strong> Cliente e Vendedor</p>
+
+<!-- ============================  CLIENTE  ============================ -->
+<h2>Área do Cliente</h2>
+
+<h3>USR-C1 — Registar nova conta</h3>
+<p class="us">Como cliente, quero criar uma conta para poder comprar bilhetes online.</p>
+<table>
+  <thead>
+    <tr><th>Tabela</th><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+  </thead>
+  <tbody>
+    <tr><td rowspan="8"><code>utilizadores</code></td><td>id</td><td>INTEGER PK AUTOINCREMENT</td><td>Identificador único</td></tr>
+    <tr><td>nome</td><td>TEXT NOT NULL</td><td>Primeiro nome</td></tr>
+    <tr><td>apelido</td><td>TEXT NOT NULL</td><td>Apelido</td></tr>
+    <tr><td>email</td><td>TEXT UNIQUE NOT NULL</td><td>Email (identificador de login)</td></tr>
+    <tr><td>password_hash</td><td>TEXT NOT NULL</td><td>Hash bcrypt da palavra-passe</td></tr>
+    <tr><td>perfil</td><td>TEXT DEFAULT 'cliente'</td><td>Perfil: cliente / vendedor / administrador</td></tr>
+    <tr><td>data_nascimento</td><td>TEXT</td><td>Data de nascimento (YYYY-MM-DD)</td></tr>
+    <tr><td>data_registo</td><td>TEXT DEFAULT datetime('now')</td><td>Data e hora de criação da conta</td></tr>
+  </tbody>
+</table>
+
+<h3>USR-C2 — Autenticar (Login)</h3>
+<p class="us">Como cliente, quero entrar na minha conta com email e palavra-passe.</p>
+<table>
+  <thead>
+    <tr><th>Tabela</th><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>utilizadores</code></td><td>email, password_hash, perfil, estado, ultimo_acesso</td><td>—</td><td>Consulta para validação de credenciais; atualiza <code>ultimo_acesso</code></td></tr>
+    <tr><td rowspan="4"><code>acessos</code></td><td>id</td><td>INTEGER PK AUTOINCREMENT</td><td>Identificador do registo de acesso</td></tr>
+    <tr><td>utilizador_id</td><td>INTEGER FK</td><td>Referência ao utilizador autenticado</td></tr>
+    <tr><td>data_hora</td><td>TEXT DEFAULT datetime('now')</td><td>Data e hora do acesso</td></tr>
+    <tr><td>ip</td><td>TEXT</td><td>Endereço IP do cliente</td></tr>
+  </tbody>
+</table>
+
+<h3>USR-C3 — Comprar bilhetes online</h3>
+<p class="us">Como cliente, quero selecionar bilhetes para um evento e pagar online.</p>
+<table>
+  <thead>
+    <tr><th>Tabela</th><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+  </thead>
+  <tbody>
+    <tr><td rowspan="3"><code>precos</code></td><td>evento_id</td><td>INTEGER FK</td><td>Evento a que o preço pertence</td></tr>
+    <tr><td>tipo</td><td>TEXT (normal/jovem/senior)</td><td>Tipo de tarifa</td></tr>
+    <tr><td>preco</td><td>REAL NOT NULL</td><td>Valor unitário do bilhete</td></tr>
+    <tr><td rowspan="9"><code>compras</code></td><td>id</td><td>INTEGER PK AUTOINCREMENT</td><td>Identificador interno</td></tr>
+    <tr><td>referencia</td><td>TEXT UNIQUE NOT NULL</td><td>Referência visível ao cliente (ex: 2026-004821)</td></tr>
+    <tr><td>evento_id</td><td>INTEGER FK</td><td>Evento comprado</td></tr>
+    <tr><td>utilizador_id</td><td>INTEGER FK (nullable)</td><td>Cliente registado (null se convidado)</td></tr>
+    <tr><td>nome_cliente / email_cliente</td><td>TEXT NOT NULL</td><td>Dados do comprador</td></tr>
+    <tr><td>canal</td><td>TEXT DEFAULT 'online'</td><td>Canal de venda: online / presencial</td></tr>
+    <tr><td>metodo_pagamento</td><td>TEXT NOT NULL</td><td>cartao / multibanco / mbway / dinheiro</td></tr>
+    <tr><td>total</td><td>REAL NOT NULL</td><td>Valor total pago</td></tr>
+    <tr><td>estado</td><td>TEXT DEFAULT 'confirmado'</td><td>confirmado / cancelado</td></tr>
+    <tr><td rowspan="4"><code>itens_compra</code></td><td>compra_id</td><td>INTEGER FK</td><td>Compra a que o item pertence</td></tr>
+    <tr><td>tipo</td><td>TEXT (normal/jovem/senior)</td><td>Tipo de bilhete</td></tr>
+    <tr><td>quantidade</td><td>INTEGER NOT NULL</td><td>Número de bilhetes deste tipo</td></tr>
+    <tr><td>preco_unitario</td><td>REAL NOT NULL</td><td>Preço unitário no momento da compra</td></tr>
+  </tbody>
+</table>
+
+<h3>USR-C4 — Consultar histórico de compras</h3>
+<p class="us">Como cliente autenticado, quero ver todas as minhas compras anteriores.</p>
+<table>
+  <thead>
+    <tr><th>Tabela</th><th>Campos usados</th><th>Descrição</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>compras</code></td><td>referencia, total, estado, data_compra</td><td>Lista de compras do utilizador</td></tr>
+    <tr><td><code>itens_compra</code></td><td>tipo, quantidade, preco_unitario</td><td>Detalhe dos bilhetes por compra</td></tr>
+    <tr><td><code>eventos</code></td><td>nome, data, hora, sala</td><td>Informação do evento associado</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================  VENDEDOR  ============================ -->
+<h2>Área do Vendedor</h2>
+
+<h3>USR-V1 — Autenticação do vendedor</h3>
+<p class="us">Como vendedor, quero entrar na plataforma para aceder às funcionalidades de venda.</p>
+<table>
+  <thead>
+    <tr><th>Tabela</th><th>Campos usados</th><th>Descrição</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>utilizadores</code></td><td>email, password_hash, perfil='vendedor', estado, ultimo_acesso</td><td>Mesmo mecanismo de login; perfil determina o redirecionamento</td></tr>
+    <tr><td><code>acessos</code></td><td>utilizador_id, data_hora, ip</td><td>Registo do acesso do vendedor</td></tr>
+  </tbody>
+</table>
+
+<h3>USR-V2 — Consultar disponibilidade de lugares</h3>
+<p class="us">Como vendedor, quero ver em tempo real quantos lugares estão disponíveis em cada evento.</p>
+<table>
+  <thead>
+    <tr><th>Tabela</th><th>Campos usados</th><th>Descrição</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>eventos</code></td><td>id, nome, data, hora, sala, capacidade, estado</td><td>Lista de eventos publicados</td></tr>
+    <tr><td><code>compras</code> + <code>itens_compra</code></td><td>SUM(quantidade) WHERE estado='confirmado'</td><td>Total de bilhetes já vendidos por evento</td></tr>
+  </tbody>
+</table>
+
+<h3>USR-V3 — Emitir bilhete ao balcão (venda presencial)</h3>
+<p class="us">Como vendedor, quero registar a venda de bilhetes a um cliente no balcão.</p>
+<table>
+  <thead>
+    <tr><th>Tabela</th><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+  </thead>
+  <tbody>
+    <tr><td rowspan="3"><code>compras</code> (campos adicionais)</td><td>canal</td><td>TEXT = 'presencial'</td><td>Identifica a venda como presencial</td></tr>
+    <tr><td>vendedor_id</td><td>INTEGER FK → utilizadores.id</td><td>Vendedor que efetuou a venda</td></tr>
+    <tr><td>nif_cliente</td><td>TEXT</td><td>NIF do cliente (fatura)</td></tr>
+    <tr><td><code>itens_compra</code></td><td>tipo, quantidade, preco_unitario</td><td>Bilhetes vendidos presencialmente</td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>

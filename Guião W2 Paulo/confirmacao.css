@@ -1,0 +1,80 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { font-family: sans-serif; color: #222; background: #fff; }
+
+/* ── NAV ── */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #d9d9d9;
+  padding: 0 2.5rem;
+  height: 70px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.nav-left  { display: flex; align-items: center; gap: 1rem; }
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.nav-brand { font-weight: bold; font-size: 1.1rem; color: #222; text-decoration: none; }
+.nav-icon  { background: none; border: none; cursor: pointer; color: #222; line-height: 0; display: inline-flex; }
+
+.btn-pill {
+  background: #5c5c5c;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.42rem 1.2rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+}
+.btn-pill:hover       { background: #3a3a3a; }
+.btn-pill-light       { background: #8a8a8a; }
+.btn-pill-light:hover { background: #6a6a6a; }
+
+/* ── PAGE WRAPPER ── */
+.page { padding: 2rem 4rem; max-width: 1200px; margin: 0 auto; }
+
+/* ── STEPS ── */
+.steps    { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+.step-dot { width: 11px; height: 11px; border-radius: 50%; background: #bbb; }
+.step-dot.active { background: #5c5c5c; }
+
+/* ── ORDER SUMMARY ── */
+.order-box   { background: #ececec; padding: 1.2rem; margin-bottom: 1.5rem; }
+.order-row   { display: flex; justify-content: space-between; padding: 0.25rem 0; font-size: 0.9rem; }
+.order-total { font-weight: bold; font-size: 1rem; border-top: 1px solid #bbb; margin-top: 0.5rem; padding-top: 0.6rem; }
+
+/* ── BUTTONS ── */
+.btn {
+  background: #5c5c5c;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.42rem 1.3rem;
+  font-size: 0.92rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+}
+.btn:hover         { background: #3a3a3a; }
+.btn-success       { background: #4a9e6b; }
+.btn-success:hover { background: #357a52; }
+
+/* ── ALERT ── */
+.alert         { padding: 1rem 1.5rem; background: #d9d9d9; margin-bottom: 1.5rem; border-radius: 2px; }
+.alert-success { background: #d4edda; border-left: 4px solid #4a9e6b; }
+
+/* ── UTILITY ── */
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.text-bold   { font-weight: bold; }
+.text-center { text-align: center; }
+.text-sm     { font-size: 0.85rem; color: #555; }
