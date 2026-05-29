@@ -26,14 +26,16 @@
     <div class="form-card" style="max-width:440px; margin:3rem auto;">
       <h1 class="page-title text-center">Entrar</h1>
 
-      <form action="conta.html">
+      <p id="msg-erro"   class="text-sm" style="color:red;   text-align:center; display:none;"></p>
+      <p id="msg-sucesso" class="text-sm" style="color:green; text-align:center; display:none;"></p>
+      <form action="scripts/login.php" method="POST">
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" placeholder="email@exemplo.com" />
+          <input type="email" id="email" name="email" placeholder="email@exemplo.com" />
         </div>
         <div class="form-group">
           <label for="password">Palavra-passe</label>
-          <input type="password" id="password" placeholder="••••••••" />
+          <input type="password" id="password" name="password" placeholder="••••••••" />
         </div>
         <button type="submit" class="btn btn-full mt-2">Entrar</button>
       </form>
@@ -42,5 +44,22 @@
     </div>
   </main>
 
+  <script>
+    const params = new URLSearchParams(location.search);
+    const erros = {
+      credenciais_invalidas: 'Email ou palavra-passe incorretos.',
+      campos_vazios: 'Preencha todos os campos.'
+    };
+    if (params.get('erro')) {
+      const el = document.getElementById('msg-erro');
+      el.textContent = erros[params.get('erro')] || 'Erro desconhecido.';
+      el.style.display = 'block';
+    }
+    if (params.get('sucesso')) {
+      const el = document.getElementById('msg-sucesso');
+      el.textContent = 'Conta criada com sucesso. Pode entrar agora.';
+      el.style.display = 'block';
+    }
+  </script>
 </body>
 </html>
