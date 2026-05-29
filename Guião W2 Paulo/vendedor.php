@@ -2,7 +2,7 @@
 require_once 'scripts/db.php';
 require_once 'scripts/sessao.php';
 
-requirePerfil('vendedor');
+requirePerfil('vendedor', 'login.html');
 
 $vendedor = getUtilizador();
 $db       = getDB();

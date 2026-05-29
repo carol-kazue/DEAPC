@@ -57,7 +57,7 @@ $vendidos = (int)$stmtVend->execute()->fetchArray(SQLITE3_ASSOC)['vendidos'];
 
 $total_pedido = $qty_normal + $qty_jovem + $qty_senior;
 if (($vendidos + $total_pedido) > $capacidade) {
-    header('Location: ../carrinho.php?evento_id=' . $evento_id . '&erro=sem_lugares');
+    header('Location: ../carrinho.html?evento_id=' . $evento_id . '&erro=sem_lugares');
     exit;
 }
 
