@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eventos — Admin Casa da Música</title>
+  <link rel="stylesheet" href="styles/admin.css" />
+</head>
+<body>
+
+  <nav class="nav-admin">
+    <div class="nav-left">
+      <a href="admin.html" class="nav-brand">Casa da Música — Admin</a>
+      <a href="admin-eventos.html" class="btn-pill">Eventos</a>
+      <a href="admin-relatorios.html" class="btn-pill">Relatórios</a>
+      <a href="admin-utilizadores.html" class="btn-pill">Utilizadores</a>
+    </div>
+    <div class="nav-right">
+      <a href="scripts/logout.php" class="btn-pill btn-pill-light">Sair</a>
+    </div>
+  </nav>
+
+  <main class="page">
+    <div class="sec-header">
+      <h1 class="page-title">Eventos</h1>
+      <a href="admin-evento-criar.html" class="btn">+ Novo Evento</a>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Data</th>
+            <th>Local</th>
+            <th>Vendidos</th>
+            <th>Lotação</th>
+            <th>Estado</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-eventos">
+          <tr><td colspan="8" style="text-align:center;">A carregar...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    fetch('scripts/admin_listar_eventos.php')
+      .then(r => r.json())
+      .then(eventos => {
+        const tbody = document.getElementById('tabela-eventos');
+
+        if (eventos.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Nenhum evento encontrado.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = eventos.map(ev => {
+          const data = new Date(ev.data + 'T00:00:00');
+          const dataFmt = data.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' });
+          const badgeClass = ev.estado === 'publicado' ? 'badge-green' : ev.estado === 'cancelado' ? 'badge-red' : 'badge-gray';
+          const estadoLabel = ev.estado.charAt(0).toUpperCase() + ev.estado.slice(1);
+
+          return `
+            <tr>
+              <td>#${ev.id}</td>
+              <td>${ev.nome}</td>
+              <td>${dataFmt}</td>
+              <td>${ev.sala}</td>
+              <td>${ev.vendidos}</td>
+              <td>${ev.capacidade}</td>
+              <td><span class="badge ${badgeClass}">${estadoLabel}</span></td>
+              <td class="col-actions">
+                <a href="admin-evento-editar.html?id=${ev.id}" class="btn btn-sm">Editar</a>
+                <button class="btn btn-sm btn-danger" onclick="cancelarEvento(${ev.id}, this)">Cancelar</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      })
+      .catch(() => {
+        document.getElementById('tabela-eventos').innerHTML =
+          '<tr><td colspan="8" style="text-align:center; color:red;">Erro ao carregar eventos.</td></tr>';
+      });
+
+    function cancelarEvento(id, btn) {
+      if (!confirm('Tens a certeza que queres cancelar este evento?')) return;
+      fetch('scripts/cancelar_evento.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + id
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.sucesso) {
+          const tr = btn.closest('tr');
+          tr.querySelector('.badge').className = 'badge badge-red';
+          tr.querySelector('.badge').textContent = 'Cancelado';
+          btn.disabled = true;
+        } else {
+          alert('Erro: ' + (res.erro ?? 'desconhecido'));
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
