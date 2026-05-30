@@ -25,25 +25,49 @@
 </script>
 <script>
   const POR_PAGINA = 12;
-  let paginaAtual = 1;
   let todosEventos = [];
+  let eventosFiltrados = [];
 
   fetch('scripts/listar_eventos.php')
     .then(r => r.json())
     .then(eventos => {
       todosEventos = eventos;
+      eventosFiltrados = eventos;
       renderPagina(1);
     });
 
+  function pesquisar() {
+    const nome     = document.getElementById('pesquisa').value.toLowerCase().trim();
+    const dataDE   = document.getElementById('data-de').value;
+    const dataATE  = document.getElementById('data-ate').value;
+    const categoria = document.getElementById('categoria').value.toLowerCase().trim();
+
+    eventosFiltrados = todosEventos.filter(ev => {
+      const nomeOk = nome === '' || ev.nome.toLowerCase().includes(nome);
+      const catOk  = categoria === '' || ev.categoria.toLowerCase() === categoria;
+      const dataEv = ev.data; // formato YYYY-MM-DD
+      const deOk   = dataDE  === '' || dataEv >= dataDE;
+      const ateOk  = dataATE === '' || dataEv <= dataATE;
+      return nomeOk && catOk && deOk && ateOk;
+    });
+
+    renderPagina(1);
+  }
+
   function renderPagina(pagina) {
-    paginaAtual = pagina;
     const inicio = (pagina - 1) * POR_PAGINA;
     const fim = inicio + POR_PAGINA;
-    const eventosPagina = todosEventos.slice(inicio, fim);
-    const totalPaginas = Math.ceil(todosEventos.length / POR_PAGINA);
+    const eventosPagina = eventosFiltrados.slice(inicio, fim);
+    const totalPaginas = Math.ceil(eventosFiltrados.length / POR_PAGINA);
 
-    // Renderiza cards
     const grid = document.getElementById('cards-grid');
+
+    if (eventosFiltrados.length === 0) {
+      grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#555;">Nenhum evento encontrado.</p>';
+      document.getElementById('paginacao').innerHTML = '';
+      return;
+    }
+
     grid.innerHTML = eventosPagina.map(ev => {
       const data = new Date(ev.data + 'T00:00:00');
       const dataFmt = data.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -62,7 +86,6 @@
       `;
     }).join('');
 
-    // Renderiza paginação
     const pag = document.getElementById('paginacao');
     let html = '';
     if (pagina > 1) html += `<button class="pg-btn" onclick="renderPagina(${pagina - 1})">‹</button>`;
@@ -72,7 +95,6 @@
     if (pagina < totalPaginas) html += `<button class="pg-btn" onclick="renderPagina(${pagina + 1})">›</button>`;
     pag.innerHTML = html;
 
-    // Volta ao topo da lista
     document.getElementById('cards-grid').scrollIntoView({ behavior: 'smooth' });
   }
 </script>
@@ -109,14 +131,16 @@
         <label for="categoria">Categoria</label>
         <select id="categoria">
           <option value="">Todas</option>
-          <option>Sinfónico</option>
-          <option>Jazz</option>
-          <option>Câmara</option>
-          <option>Contemporâneo</option>
-          <option>World Music</option>
+          <option value="Música de Câmara">Música de Câmara</option>
+          <option value="Jazz">Jazz</option>
+          <option value="Música Clássica">Música Clássica</option>
+          <option value="World Music">World Music</option>
+          <option value="Rock">Rock</option>
+          <option value="Ópera">Ópera</option>
+          <option value="Música Contemporânea">Música Contemporânea</option>
         </select>
       </div>
-      <button class="btn" style="margin-bottom:0">Pesquisar</button>
+      <button class="btn" style="margin-bottom:0" onclick="pesquisar()">Pesquisar</button>
     </div>
 
     <!-- Grelha de eventos -->
