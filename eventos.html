@@ -23,6 +23,59 @@
       }
     });
 </script>
+<script>
+  const POR_PAGINA = 12;
+  let paginaAtual = 1;
+  let todosEventos = [];
+
+  fetch('scripts/listar_eventos.php')
+    .then(r => r.json())
+    .then(eventos => {
+      todosEventos = eventos;
+      renderPagina(1);
+    });
+
+  function renderPagina(pagina) {
+    paginaAtual = pagina;
+    const inicio = (pagina - 1) * POR_PAGINA;
+    const fim = inicio + POR_PAGINA;
+    const eventosPagina = todosEventos.slice(inicio, fim);
+    const totalPaginas = Math.ceil(todosEventos.length / POR_PAGINA);
+
+    // Renderiza cards
+    const grid = document.getElementById('cards-grid');
+    grid.innerHTML = eventosPagina.map(ev => {
+      const data = new Date(ev.data + 'T00:00:00');
+      const dataFmt = data.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' });
+      const preco = ev.preco_minimo > 0 ? 'A partir de €' + parseFloat(ev.preco_minimo).toFixed(2) : 'Entrada livre';
+      return `
+        <div class="card">
+          <div class="img-box img-box-md"></div>
+          <p class="card-title">${ev.nome}</p>
+          <p class="card-meta">${dataFmt} · ${ev.hora.substring(0,5)} · ${ev.sala}</p>
+          <p class="card-meta">${ev.categoria}</p>
+          <div class="card-footer">
+            <span class="card-price">${preco}</span>
+            <a href="evento.html?id=${ev.id}" class="btn btn-sm">Ver Mais</a>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Renderiza paginação
+    const pag = document.getElementById('paginacao');
+    let html = '';
+    if (pagina > 1) html += `<button class="pg-btn" onclick="renderPagina(${pagina - 1})">‹</button>`;
+    for (let i = 1; i <= totalPaginas; i++) {
+      html += `<button class="pg-btn ${i === pagina ? 'active' : ''}" onclick="renderPagina(${i})">${i}</button>`;
+    }
+    if (pagina < totalPaginas) html += `<button class="pg-btn" onclick="renderPagina(${pagina + 1})">›</button>`;
+    pag.innerHTML = html;
+
+    // Volta ao topo da lista
+    document.getElementById('cards-grid').scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
 <body>
 
   <nav>
@@ -67,83 +120,12 @@
     </div>
 
     <!-- Grelha de eventos -->
-    <div class="cards-grid">
-
-      <div class="card">
-        <div class="img-box img-box-md"></div>
-        <p class="card-title">Concerto Sinfónico n.º 12</p>
-        <p class="card-meta">15 Jun 2026 · 21h00 · Sala Suggia</p>
-        <p class="card-meta">Sinfónico</p>
-        <div class="card-footer">
-          <span class="card-price">A partir de €15</span>
-          <a href="evento.html" class="btn btn-sm">Ver Mais</a>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="img-box img-box-md"></div>
-        <p class="card-title">Jazz à Noite</p>
-        <p class="card-meta">22 Jun 2026 · 22h00 · Sala 2</p>
-        <p class="card-meta">Jazz</p>
-        <div class="card-footer">
-          <span class="card-price">A partir de €12</span>
-          <a href="evento.html" class="btn btn-sm">Ver Mais</a>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="img-box img-box-md"></div>
-        <p class="card-title">Quarteto de Cordas</p>
-        <p class="card-meta">28 Jun 2026 · 19h30 · Sala Suggia</p>
-        <p class="card-meta">Câmara</p>
-        <div class="card-footer">
-          <span class="card-price">A partir de €10</span>
-          <a href="evento.html" class="btn btn-sm">Ver Mais</a>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="img-box img-box-md"></div>
-        <p class="card-title">Fado Contemporâneo</p>
-        <p class="card-meta">5 Jul 2026 · 20h00 · Grande Auditório</p>
-        <p class="card-meta">Contemporâneo</p>
-        <div class="card-footer">
-          <span class="card-price">A partir de €18</span>
-          <a href="evento.html" class="btn btn-sm">Ver Mais</a>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="img-box img-box-md"></div>
-        <p class="card-title">Noite de Piano</p>
-        <p class="card-meta">12 Jul 2026 · 20h30 · Sala Suggia</p>
-        <p class="card-meta">Sinfónico</p>
-        <div class="card-footer">
-          <span class="card-price">A partir de €20</span>
-          <a href="evento.html" class="btn btn-sm">Ver Mais</a>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="img-box img-box-md"></div>
-        <p class="card-title">World Music Festival</p>
-        <p class="card-meta">19 Jul 2026 · 18h00 · Terraço</p>
-        <p class="card-meta">World Music</p>
-        <div class="card-footer">
-          <span class="card-price">A partir de €8</span>
-          <a href="evento.html" class="btn btn-sm">Ver Mais</a>
-        </div>
-      </div>
-
+    <div class="cards-grid" id="cards-grid">
+      <!-- preenchido pelo JS -->
     </div>
 
     <!-- Paginação -->
-    <div class="pagination">
-      <button class="pg-btn active">1</button>
-      <button class="pg-btn">2</button>
-      <button class="pg-btn">3</button>
-      <button class="pg-btn">›</button>
-    </div>
+    <div class="pagination" id="paginacao"></div>
   </main>
 
 </body>
