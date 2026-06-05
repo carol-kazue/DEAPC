@@ -95,6 +95,21 @@ select {
 
 /* ── EVENT CARDS GRID ── */
 .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .page { padding: 1.5rem 2rem; }
+}
+
+@media (max-width: 600px) {
+  .cards-grid { grid-template-columns: 1fr; }
+  .page { padding: 1rem; }
+  nav { padding: 0 1rem; height: auto; min-height: 60px; flex-wrap: wrap; gap: 0.5rem; padding-top: 0.6rem; padding-bottom: 0.6rem; }
+  .nav-brand { font-size: 1rem; }
+  .search-bar { flex-direction: column; gap: 0.6rem; padding: 0.8rem; }
+  .search-bar .form-group { min-width: unset; flex: unset; width: 100%; }
+}
 .card { background: #d9d9d9; padding: 1rem; }
 .card-title  { font-size: 0.97rem; font-weight: bold; margin: 0.6rem 0 0.2rem; }
 .card-meta   { font-size: 0.82rem; color: #555; }
