@@ -109,7 +109,11 @@ $preco_min = $precos ? min($precos) : null;
           <?php endforeach; ?>
 
           <?php if ($disponiveis > 0): ?>
-          <a href="carrinho.php?evento_id=<?= (int)$ev['id'] ?>" class="btn btn-full mt-3">Selecionar Bilhetes</a>
+            <?php
+            $destino = 'carrinho.php?evento_id=' . (int)$ev['id'];
+            $href    = isLoggedIn() ? $destino : ('login.html?next=' . urlencode($destino));
+            ?>
+            <a href="<?= $href ?>" class="btn btn-full mt-3">Selecionar Bilhetes</a>
           <?php else: ?>
           <button class="btn btn-full mt-3" disabled>Esgotado</button>
           <?php endif; ?>
