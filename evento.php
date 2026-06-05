@@ -1,5 +1,6 @@
 <?php
 require_once 'scripts/db.php';
+require_once 'scripts/sessao.php';
 
 $id = (int)($_GET['id'] ?? 0);
 if ($id === 0) {
@@ -57,12 +58,14 @@ $preco_min = $precos ? min($precos) : null;
       <a href="eventos.php" class="btn-pill">Eventos</a>
     </div>
     <div class="nav-right">
-      <a href="cliente.php" class="nav-icon" aria-label="Conta">
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.118a7.5 7.5 0 0 1 15 0"/>
-        </svg>
-      </a>
-      <a href="login.html" class="btn-pill">Entrar</a>
+      <?php if (isLoggedIn()): $u = getUtilizador(); ?>
+        <a href="<?= $u['perfil'] === 'administrador' ? 'admin.php' : ($u['perfil'] === 'vendedor' ? 'vendedor.php' : 'cliente.php') ?>" class="btn-pill">
+          <?= htmlspecialchars($u['nome']) ?>
+        </a>
+        <a href="scripts/logout.php" class="btn-pill btn-pill-light">Sair</a>
+      <?php else: ?>
+        <a href="login.html" class="btn-pill">Entrar</a>
+      <?php endif; ?>
     </div>
   </nav>
 

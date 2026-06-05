@@ -1,5 +1,10 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
+    $sessDir = __DIR__ . '/../data/sessions';
+    if (!is_dir($sessDir)) {
+        mkdir($sessDir, 0755, true);
+    }
+    session_save_path($sessDir);
     session_start();
 }
 
