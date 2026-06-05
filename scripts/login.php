@@ -43,6 +43,12 @@ $_SESSION['nome']           = $row['nome'] . ' ' . $row['apelido'];
 $_SESSION['email']          = $row['email'];
 $_SESSION['perfil']         = $row['perfil'];
 
+$next = trim($_POST['next'] ?? '');
+if ($next !== '' && !preg_match('/^https?:\/\//i', $next)) {
+    header('Location: ../' . ltrim($next, '/'));
+    exit;
+}
+
 switch ($row['perfil']) {
     case 'administrador': header('Location: ../admin.php');     break;
     case 'vendedor':      header('Location: ../vendedor.php');  break;

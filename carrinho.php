@@ -8,6 +8,12 @@ if ($evento_id === 0) {
     exit;
 }
 
+if (!isLoggedIn()) {
+    $next = 'carrinho.php?evento_id=' . $evento_id;
+    header('Location: login.html?next=' . urlencode($next));
+    exit;
+}
+
 $db   = getDB();
 $stmt = $db->prepare(
     'SELECT id, nome, data, hora, sala, capacidade

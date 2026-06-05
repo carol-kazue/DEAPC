@@ -30,6 +30,7 @@
       <p id="msg-sucesso" class="text-sm" style="color:#276749; text-align:center; display:none;"></p>
 
       <form id="form-login" action="scripts/login.php" method="POST" novalidate>
+        <input type="hidden" id="next" name="next" value="" />
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" placeholder="email@exemplo.com" autocomplete="email" />
@@ -48,6 +49,15 @@
   <script src="scripts/validacao.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
+
+    // Preserva o destino após login
+    const next = params.get('next');
+    if (next) {
+      document.getElementById('next').value = next;
+      const msgNext = document.getElementById('msg-sucesso');
+      msgNext.textContent = 'Inicie sessão para continuar a compra.';
+      msgNext.style.display = 'block';
+    }
     const msgErros = {
       credenciais_invalidas: 'Email ou palavra-passe incorretos.',
       campos_vazios: 'Preencha todos os campos.'
