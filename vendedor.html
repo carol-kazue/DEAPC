@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Balcão — Casa da Música</title>
+  <link rel="stylesheet" href="styles/vendedor.css" />
+</head>
+<body>
+
+  <nav class="nav-vendor">
+    <div class="nav-left">
+      <a href="vendedor.php" class="nav-brand">Casa da Música — Balcão</a>
+    </div>
+    <div class="nav-right">
+      <span class="text-sm" style="margin-right:0.5rem;">Vendedor: João Pereira</span>
+      <a href="login.html" class="btn-pill">Sair</a>
+    </div>
+  </nav>
+
+  <main class="page">
+    <h1 class="page-title">Emissão de Bilhetes ao Balcão</h1>
+
+    <div id="msg-sucesso" style="display:none; background:#c6f6d5; color:#276749; padding:0.8rem 1rem; border-radius:6px; margin-bottom:1rem;"></div>
+    <div id="msg-erro"    style="display:none; background:#fed7d7; color:#c53030; padding:0.8rem 1rem; border-radius:6px; margin-bottom:1rem;"></div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+
+      <!-- Pesquisa de evento -->
+      <div>
+        <h2 style="font-size:1rem; font-weight:bold; margin-bottom:0.8rem;">1. Pesquisar Evento</h2>
+        <div class="search-bar" style="flex-direction:column; align-items:stretch;">
+          <div class="form-group">
+            <label for="pesq-evento">Nome do evento</label>
+            <input type="text" id="pesq-evento" placeholder="Ex: Concerto Sinfónico..." />
+          </div>
+          <div class="form-group">
+            <label for="pesq-data">Data</label>
+            <input type="date" id="pesq-data" />
+          </div>
+          <button type="button" class="btn" onclick="filtrarEventos()">Pesquisar</button>
+        </div>
+
+        <h2 style="font-size:1rem; font-weight:bold; margin:1rem 0 0.8rem;">Resultados</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Evento</th>
+                <th>Data</th>
+                <th>Sala</th>
+                <th>Disponível</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tbody-eventos">
+              <tr data-nome="Concerto Sinfónico n.º 12" data-data="2026-06-15" data-sala="Sala Suggia"
+                  data-normal="25" data-jovem="15" data-senior="18">
+                <td>Concerto Sinfónico n.º 12</td>
+                <td>15 Jun 2026</td>
+                <td>Sala Suggia</td>
+                <td>842</td>
+                <td><button class="btn btn-sm" onclick="selecionarEvento(this)">Selecionar</button></td>
+              </tr>
+              <tr data-nome="Jazz à Noite" data-data="2026-06-22" data-sala="Sala 2"
+                  data-normal="12" data-jovem="8" data-senior="10">
+                <td>Jazz à Noite</td>
+                <td>22 Jun 2026</td>
+                <td>Sala 2</td>
+                <td>156</td>
+                <td><button class="btn btn-sm" onclick="selecionarEvento(this)">Selecionar</button></td>
+              </tr>
+              <tr data-nome="Quarteto de Cordas" data-data="2026-06-28" data-sala="Sala Suggia"
+                  data-normal="10" data-jovem="6" data-senior="8">
+                <td>Quarteto de Cordas</td>
+                <td>28 Jun 2026</td>
+                <td>Sala Suggia</td>
+                <td>1028</td>
+                <td><button class="btn btn-sm" onclick="selecionarEvento(this)">Selecionar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Emissão de bilhete -->
+      <div>
+        <h2 style="font-size:1rem; font-weight:bold; margin-bottom:0.8rem;">2. Emitir Bilhete</h2>
+        <form id="form-venda" class="form-card" novalidate>
+          <div class="form-group">
+            <label>Evento selecionado <span style="color:#c53030;">*</span></label>
+            <input type="text" id="evento-sel" name="evento_sel" readonly
+                   style="background:#e8e8e8;" placeholder="— selecione um evento —" />
+          </div>
+
+          <div class="form-group">
+            <label for="nome-cliente">Nome do cliente <span style="color:#c53030;">*</span></label>
+            <input type="text" id="nome-cliente" name="nome_cliente" placeholder="Nome Apelido" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email-cliente">Email <span style="color:#c53030;">*</span></label>
+              <input type="email" id="email-cliente" name="email_cliente" placeholder="email@exemplo.com" />
+            </div>
+            <div class="form-group">
+              <label for="tel-cliente">Telefone</label>
+              <input type="text" id="tel-cliente" name="telefone_cliente" placeholder="9xxxxxxxx" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="nif-cliente">NIF</label>
+            <input type="text" id="nif-cliente" name="nif_cliente" placeholder="000000000" maxlength="9" />
+          </div>
+
+          <hr style="margin:0.8rem 0;" />
+
+          <div class="table-wrap mb-1">
+            <table>
+              <thead><tr><th>Tipo</th><th>Preço</th><th>Quantidade</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Normal</td>
+                  <td id="p-normal">—</td>
+                  <td><input type="number" id="qty-normal" name="qty_normal" value="0" min="0" max="20"
+                             style="width:70px; padding:4px 8px;" oninput="atualizaTotal()" /></td>
+                </tr>
+                <tr>
+                  <td>Jovem (até 30)</td>
+                  <td id="p-jovem">—</td>
+                  <td><input type="number" id="qty-jovem" name="qty_jovem" value="0" min="0" max="20"
+                             style="width:70px; padding:4px 8px;" oninput="atualizaTotal()" /></td>
+                </tr>
+                <tr>
+                  <td>Sénior (+65)</td>
+                  <td id="p-senior">—</td>
+                  <td><input type="number" id="qty-senior" name="qty_senior" value="0" min="0" max="20"
+                             style="width:70px; padding:4px 8px;" oninput="atualizaTotal()" /></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="form-group">
+            <label for="pagamento-tipo">Forma de pagamento</label>
+            <select id="pagamento-tipo" name="metodo_pagamento">
+              <option value="dinheiro">Dinheiro</option>
+              <option value="multibanco">Multibanco</option>
+              <option value="mbway">MB Way</option>
+              <option value="cartao">Cartão</option>
+            </select>
+          </div>
+
+          <div class="order-box mt-1">
+            <div class="order-row order-total">
+              <span>Total a cobrar</span>
+              <span id="total-cobrar">€0,00</span>
+            </div>
+          </div>
+
+          <div class="form-actions mt-2">
+            <button type="submit" class="btn btn-success">Emitir Bilhete</button>
+            <button type="button" class="btn" onclick="limparFormulario()">Limpar</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="scripts/validacao.js"></script>
+  <script>
+    let eventoAtual = null;
+
+    function filtrarEventos() {
+      const pesq = document.getElementById('pesq-evento').value.toLowerCase();
+      const data = document.getElementById('pesq-data').value;
+      document.querySelectorAll('#tbody-eventos tr').forEach(function (tr) {
+        const nome  = tr.dataset.nome.toLowerCase();
+        const dData = tr.dataset.data;
+        const visNome = !pesq || nome.includes(pesq);
+        const visData = !data  || dData === data;
+        tr.style.display = (visNome && visData) ? '' : 'none';
+      });
+    }
+
+    function selecionarEvento(btn) {
+      const tr = btn.closest('tr');
+      eventoAtual = {
+        nome:   tr.dataset.nome,
+        normal: parseFloat(tr.dataset.normal),
+        jovem:  parseFloat(tr.dataset.jovem),
+        senior: parseFloat(tr.dataset.senior)
+      };
+      document.getElementById('evento-sel').value = eventoAtual.nome;
+      document.getElementById('p-normal').textContent = '€' + eventoAtual.normal.toFixed(2).replace('.',',');
+      document.getElementById('p-jovem').textContent  = '€' + eventoAtual.jovem.toFixed(2).replace('.',',');
+      document.getElementById('p-senior').textContent = '€' + eventoAtual.senior.toFixed(2).replace('.',',');
+      ['qty-normal','qty-jovem','qty-senior'].forEach(function (id) {
+        document.getElementById(id).value = 0;
+      });
+      document.getElementById('total-cobrar').textContent = '€0,00';
+      limpaErro(document.getElementById('evento-sel'));
+
+      // Destaca linha selecionada
+      document.querySelectorAll('#tbody-eventos tr').forEach(function (r) {
+        r.style.background = '';
+      });
+      tr.style.background = '#ebf8ff';
+    }
+
+    function atualizaTotal() {
+      if (!eventoAtual) return;
+      const qn = parseInt(document.getElementById('qty-normal').value) || 0;
+      const qj = parseInt(document.getElementById('qty-jovem').value)  || 0;
+      const qs = parseInt(document.getElementById('qty-senior').value) || 0;
+      const total = qn * eventoAtual.normal + qj * eventoAtual.jovem + qs * eventoAtual.senior;
+      document.getElementById('total-cobrar').textContent = '€' + total.toFixed(2).replace('.',',');
+    }
+
+    function limparFormulario() {
+      document.getElementById('form-venda').reset();
+      document.getElementById('total-cobrar').textContent = '€0,00';
+      ['p-normal','p-jovem','p-senior'].forEach(function (id) {
+        document.getElementById(id).textContent = '—';
+      });
+      eventoAtual = null;
+      document.querySelectorAll('#tbody-eventos tr').forEach(function (r) {
+        r.style.background = '';
+      });
+    }
+
+    // Validação ao submeter
+    document.getElementById('form-venda').addEventListener('submit', function (e) {
+      e.preventDefault();
+      let ok = true;
+
+      const fEvento = document.getElementById('evento-sel');
+      const fNome   = document.getElementById('nome-cliente');
+      const fEmail  = document.getElementById('email-cliente');
+      const fTel    = document.getElementById('tel-cliente');
+      const fNif    = document.getElementById('nif-cliente');
+
+      if (!fEvento.value) {
+        marcaErro(fEvento, 'Selecione um evento da lista.'); ok = false;
+      } else limpaErro(fEvento);
+
+      if (!fNome.value.trim()) {
+        marcaErro(fNome, 'O nome do cliente é obrigatório.'); ok = false;
+      } else limpaErro(fNome);
+
+      if (!fEmail.value.trim()) {
+        marcaErro(fEmail, 'O email do cliente é obrigatório.'); ok = false;
+      } else if (!emailValido(fEmail.value)) {
+        marcaErro(fEmail, 'Formato de email inválido.'); ok = false;
+      } else limpaErro(fEmail);
+
+      if (!telefoneValido(fTel.value)) {
+        marcaErro(fTel, 'Telefone inválido (9 a 15 dígitos).'); ok = false;
+      } else limpaErro(fTel);
+
+      if (!nifValido(fNif.value)) {
+        marcaErro(fNif, 'O NIF deve ter 9 dígitos.'); ok = false;
+      } else limpaErro(fNif);
+
+      const qn = parseInt(document.getElementById('qty-normal').value) || 0;
+      const qj = parseInt(document.getElementById('qty-jovem').value)  || 0;
+      const qs = parseInt(document.getElementById('qty-senior').value) || 0;
+      if (qn + qj + qs === 0) {
+        const msg = document.getElementById('msg-erro');
+        msg.textContent = 'Selecione pelo menos um bilhete.';
+        msg.style.display = 'block';
+        ok = false;
+      } else {
+        document.getElementById('msg-erro').style.display = 'none';
+      }
+
+      if (!ok) return;
+
+      // Simulação de emissão (dados não vão ao servidor nesta página estática)
+      const ref = 'BAL-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random()*999999)).padStart(6,'0');
+      const suc = document.getElementById('msg-sucesso');
+      suc.textContent = 'Bilhete emitido com sucesso! Referência: ' + ref;
+      suc.style.display = 'block';
+      document.getElementById('msg-erro').style.display = 'none';
+      limparFormulario();
+    });
+  </script>
+</body>
+</html>

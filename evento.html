@@ -6,7 +6,6 @@
   <title>Concerto Sinfónico n.º 12 — Casa da Música</title>
   <link rel="stylesheet" href="styles/evento.css" />
 </head>
-
 <body>
 
   <nav>
@@ -14,108 +13,90 @@
       <a href="index.html" class="nav-brand">Casa da Música</a>
       <a href="eventos.html" class="btn-pill">Eventos</a>
     </div>
-    <div class="nav-right" id="nav-right">
-      <!-- preenchido pelo JS -->
+    <div class="nav-right">
+      <a href="conta.html" class="nav-icon" aria-label="Conta">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.118a7.5 7.5 0 0 1 15 0"/>
+        </svg>
+      </a>
+      <a href="bilhetes.html" class="nav-icon" aria-label="Carrinho">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+        </svg>
+      </a>
+      <a href="login.html" class="btn-pill">Entrar</a>
     </div>
   </nav>
 
-  <main class="page" id="conteudo" style="display:none;">
-  <p class="text-sm mb-2"><a href="eventos.html">← Eventos</a></p>
-  <div class="img-box img-box-lg mb-2"></div>
+  <main class="page">
 
-  <div class="detail-grid">
-    <div>
-      <h1 class="page-title" id="ev-nome"></h1>
-      <p class="detail-meta" id="ev-data"></p>
-      <p class="detail-meta" id="ev-sala"></p>
-      <p class="detail-meta" id="ev-categoria"></p>
-      <hr />
-      <p class="detail-desc" id="ev-descricao"></p>
-    </div>
+    <!-- Breadcrumb -->
+    <p class="text-sm mb-2"><a href="eventos.html">← Eventos</a></p>
 
-    <div>
-      <div class="ticket-box">
-        <p class="ticket-box-title">Selecionar Bilhetes</p>
-        <div id="ev-precos"></div>
-        <a href="carrinho.html" class="btn btn-full mt-3" id="btn-bilhetes">Selecionar Bilhetes</a>
+    <!-- Imagem principal -->
+    <div class="img-box img-box-lg mb-2"></div>
+
+    <div class="detail-grid">
+
+      <!-- Coluna principal -->
+      <div>
+        <h1 class="page-title">Concerto Sinfónico n.º 12</h1>
+        <p class="detail-meta">📅 15 de Junho de 2026 · 21h00</p>
+        <p class="detail-meta">📍 Sala Suggia, Casa da Música, Porto</p>
+        <p class="detail-meta">🏷 Sinfónico</p>
+        <hr />
+        <p class="detail-desc">
+          Uma noite inesquecível com a Orquestra Sinfónica do Porto Casa da Música,
+          sob a direção do maestro convidado João Lopes. O programa inclui obras de
+          Beethoven, Brahms e Mahler, proporcionando uma experiência musical de
+          elevado nível artístico.
+        </p>
+        <p class="detail-desc">
+          A Sala Suggia, com a sua acústica excecional e arquitetura deslumbrante,
+          oferece o ambiente perfeito para esta noite de música clássica.
+          Capacidade total: 1238 lugares.
+        </p>
       </div>
-      <div class="alert alert-info mt-2">
-        <p class="text-sm"><strong>Lugares disponíveis:</strong> <span id="ev-disponiveis"></span></p>
+
+      <!-- Coluna lateral: seleção de bilhetes -->
+      <div>
+        <div class="ticket-box">
+          <p class="ticket-box-title">Selecionar Bilhetes</p>
+
+          <div class="ticket-row">
+            <div>
+              <p class="text-bold">Normal</p>
+              <p class="text-sm">Tarifa geral</p>
+            </div>
+            <span class="ticket-price">€25,00</span>
+          </div>
+
+          <div class="ticket-row">
+            <div>
+              <p class="text-bold">Jovem</p>
+              <p class="text-sm">Até 30 anos</p>
+            </div>
+            <span class="ticket-price">€15,00</span>
+          </div>
+
+          <div class="ticket-row">
+            <div>
+              <p class="text-bold">Sénior</p>
+              <p class="text-sm">Mais de 65 anos</p>
+            </div>
+            <span class="ticket-price">€18,00</span>
+          </div>
+
+          <a href="bilhetes.html" class="btn btn-full mt-3">Selecionar Bilhetes</a>
+        </div>
+
+        <div class="alert alert-info mt-2">
+          <p class="text-sm"><strong>Lugares disponíveis:</strong> 842 / 1238</p>
+        </div>
       </div>
+
     </div>
-  </div>
-</main>
-
-<main class="page" id="conteudo-erro" style="display:none;">
-  <p>Evento não encontrado. <a href="eventos.html">← Voltar aos eventos</a></p>
-</main>
-
-<script>
-  fetch('scripts/sessao_status.php')
-    .then(r => r.json())
-    .then(data => {
-      const nav = document.getElementById('nav-right');
-      if (data.loggedIn) {
-        nav.innerHTML = `
-          <span style="font-size:0.9rem;">Olá, ${data.nome}</span>
-          <a href="scripts/logout.php" class="btn-pill btn-pill-light">Sair</a>
-        `;
-      } else {
-        nav.innerHTML = `
-          <a href="login.html" class="btn-pill">Entrar</a>
-        `;
-      }
-    });
-</script>
-
-<script>
-  const params = new URLSearchParams(location.search);
-  const id = params.get('id');
-
-  if (!id) {
-    document.getElementById('conteudo-erro').style.display = '';
-  } else {
-    fetch('scripts/get_evento.php?id=' + id)
-      .then(r => r.json())
-      .then(ev => {
-        if (ev.erro) {
-          document.getElementById('conteudo-erro').style.display = '';
-          return;
-        }
-
-        const data = new Date(ev.data + 'T00:00:00');
-        const dataFmt = data.toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' });
-
-        document.title = ev.nome + ' — Casa da Música';
-        document.getElementById('ev-nome').textContent = ev.nome;
-        document.getElementById('ev-data').textContent = '📅 ' + dataFmt + ' · ' + ev.hora.substring(0,5);
-        document.getElementById('ev-sala').textContent = '📍 ' + ev.sala + ', Casa da Música, Porto';
-        document.getElementById('ev-categoria').textContent = '🏷 ' + ev.categoria;
-        document.getElementById('ev-descricao').textContent = ev.descricao ?? '';
-        document.getElementById('ev-disponiveis').textContent = ev.disponiveis + ' / ' + ev.capacidade;
-
-        const tiposLabel = { normal: 'Normal', jovem: 'Jovem', senior: 'Sénior' };
-        const tiposDesc  = { normal: 'Tarifa geral', jovem: 'Até 30 anos', senior: 'Mais de 65 anos' };
-        let precosHtml = '';
-        for (const [tipo, preco] of Object.entries(ev.precos)) {
-          precosHtml += `
-            <div class="ticket-row">
-              <div>
-                <p class="text-bold">${tiposLabel[tipo] ?? tipo}</p>
-                <p class="text-sm">${tiposDesc[tipo] ?? ''}</p>
-              </div>
-              <span class="ticket-price">${preco > 0 ? '€' + preco.toFixed(2) : 'Grátis'}</span>
-            </div>`;
-        }
-        document.getElementById('ev-precos').innerHTML = precosHtml;
-
-        // Passa o id para o carrinho
-        document.getElementById('btn-bilhetes').href = 'carrinho.html?id=' + ev.id;
-
-        document.getElementById('conteudo').style.display = '';
-      });
-  }
-</script>
+  </main>
 
 </body>
 </html>

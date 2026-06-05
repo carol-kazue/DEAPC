@@ -44,7 +44,7 @@ if ($referencia !== '') {
   <nav>
     <div class="nav-left">
       <a href="index.html" class="nav-brand">Casa da Música</a>
-      <a href="eventos.html" class="btn-pill">Eventos</a>
+      <a href="eventos.php" class="btn-pill">Eventos</a>
     </div>
   </nav>
 
@@ -89,7 +89,7 @@ if ($referencia !== '') {
 
     <div style="margin-top:1.5rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
       <a href="cliente.php" class="btn btn-pill-light">Ver Histórico</a>
-      <a href="eventos.html" class="btn">Mais Eventos</a>
+      <a href="eventos.php" class="btn">Mais Eventos</a>
     </div>
 
     <?php endif; ?>

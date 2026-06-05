@@ -46,7 +46,7 @@ $estadoBadge = ['confirmado' => 'badge-green', 'cancelado' => 'badge-red'];
   <nav>
     <div class="nav-left">
       <a href="index.html" class="nav-brand">Casa da Música</a>
-      <a href="eventos.html" class="btn-pill">Eventos</a>
+      <a href="eventos.php" class="btn-pill">Eventos</a>
     </div>
     <div class="nav-right">
       <a href="scripts/logout.php" class="btn-pill btn-pill-light">Sair</a>

@@ -44,7 +44,7 @@ $_SESSION['email']          = $row['email'];
 $_SESSION['perfil']         = $row['perfil'];
 
 switch ($row['perfil']) {
-    case 'administrador': header('Location: ../admin.html');    break;
+    case 'administrador': header('Location: ../admin.php');     break;
     case 'vendedor':      header('Location: ../vendedor.php');  break;
     default:              header('Location: ../cliente.php');   break;
 }
