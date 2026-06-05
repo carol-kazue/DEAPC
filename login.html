@@ -10,8 +10,8 @@
 
   <nav>
     <div class="nav-left">
-      <a href="index.html" class="nav-brand">Casa da Música</a>
-      <a href="eventos.html" class="btn-pill">Eventos</a>
+      <a href="index.php" class="nav-brand">Casa da Música</a>
+      <a href="eventos.php" class="btn-pill">Eventos</a>
     </div>
     <div class="nav-right">
       <a href="login.html" class="nav-icon" aria-label="Conta">
@@ -26,14 +26,17 @@
     <div class="form-card" style="max-width:440px; margin:3rem auto;">
       <h1 class="page-title text-center">Entrar</h1>
 
-      <form action="conta.html">
+      <p id="msg-erro"    class="text-sm" style="color:#c53030; text-align:center; display:none;"></p>
+      <p id="msg-sucesso" class="text-sm" style="color:#276749; text-align:center; display:none;"></p>
+
+      <form id="form-login" action="scripts/login.php" method="POST" novalidate>
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" placeholder="email@exemplo.com" />
+          <input type="email" id="email" name="email" placeholder="email@exemplo.com" autocomplete="email" />
         </div>
         <div class="form-group">
           <label for="password">Palavra-passe</label>
-          <input type="password" id="password" placeholder="••••••••" />
+          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" />
         </div>
         <button type="submit" class="btn btn-full mt-2">Entrar</button>
       </form>
@@ -42,5 +45,46 @@
     </div>
   </main>
 
+  <script src="scripts/validacao.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const msgErros = {
+      credenciais_invalidas: 'Email ou palavra-passe incorretos.',
+      campos_vazios: 'Preencha todos os campos.'
+    };
+    if (params.get('erro')) {
+      const el = document.getElementById('msg-erro');
+      el.textContent = msgErros[params.get('erro')] || 'Erro desconhecido.';
+      el.style.display = 'block';
+    }
+    if (params.get('sucesso')) {
+      const el = document.getElementById('msg-sucesso');
+      el.textContent = 'Conta criada com sucesso. Pode entrar agora.';
+      el.style.display = 'block';
+    }
+
+    const fEmail    = document.getElementById('email');
+    const fPassword = document.getElementById('password');
+
+    fEmail.addEventListener('blur', function () {
+      if (this.value && !emailValido(this.value)) marcaErro(this, 'Formato de email inválido.');
+      else limpaErro(this);
+    });
+
+    document.getElementById('form-login').addEventListener('submit', function (e) {
+      let ok = true;
+      if (!fEmail.value.trim()) {
+        marcaErro(fEmail, 'O email é obrigatório.'); ok = false;
+      } else if (!emailValido(fEmail.value)) {
+        marcaErro(fEmail, 'Formato de email inválido.'); ok = false;
+      } else limpaErro(fEmail);
+
+      if (!fPassword.value) {
+        marcaErro(fPassword, 'A palavra-passe é obrigatória.'); ok = false;
+      } else limpaErro(fPassword);
+
+      if (!ok) e.preventDefault();
+    });
+  </script>
 </body>
 </html>

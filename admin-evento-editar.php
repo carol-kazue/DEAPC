@@ -191,5 +191,34 @@ $categorias = ['Sinfónico', 'Jazz', 'Câmara', 'Contemporâneo', 'World Music',
     </form>
   </main>
 
+  <script src="scripts/validacao.js"></script>
+  <script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+      let ok = true;
+
+      [{ id: 'nome', msg: 'O título é obrigatório.' },
+       { id: 'data', msg: 'A data é obrigatória.' },
+       { id: 'hora', msg: 'A hora é obrigatória.' }
+      ].forEach(function (c) {
+        const f = document.getElementById(c.id);
+        if (!f.value.trim()) { marcaErro(f, c.msg); ok = false; }
+        else limpaErro(f);
+      });
+
+      const fCap = document.getElementById('capacidade');
+      if (!fCap.value || parseInt(fCap.value) <= 0) {
+        marcaErro(fCap, 'A lotação deve ser um número positivo.'); ok = false;
+      } else limpaErro(fCap);
+
+      ['preco_normal','preco_jovem','preco_senior'].forEach(function (nm) {
+        const f = document.querySelector('[name="' + nm + '"]');
+        if (f && parseFloat(f.value) < 0) {
+          marcaErro(f, 'O preço não pode ser negativo.'); ok = false;
+        } else if (f) limpaErro(f);
+      });
+
+      if (!ok) e.preventDefault();
+    });
+  </script>
 </body>
 </html>

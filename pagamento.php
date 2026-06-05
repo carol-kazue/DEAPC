@@ -89,34 +89,89 @@
       </div>
     </form>
 
-    <script>
-      const carrinho = JSON.parse(sessionStorage.getItem('carrinho') || '{}');
-      if (!carrinho.evento_id) {
-        window.location.href = 'eventos.php';
-      } else {
-        document.getElementById('hid-evento-id').value  = carrinho.evento_id;
-        document.getElementById('hid-qty-normal').value = carrinho.qty_normal || 0;
-        document.getElementById('hid-qty-jovem').value  = carrinho.qty_jovem  || 0;
-        document.getElementById('hid-qty-senior').value = carrinho.qty_senior || 0;
-        document.getElementById('btn-voltar').href = 'carrinho.php?evento_id=' + carrinho.evento_id;
+  <script src="scripts/validacao.js"></script>
+  <script>
+    // Preenche campos a partir do sessionStorage
+    const carrinho = JSON.parse(sessionStorage.getItem('carrinho') || '{}');
+    if (!carrinho.evento_id) {
+      window.location.href = 'eventos.php';
+    } else {
+      document.getElementById('hid-evento-id').value  = carrinho.evento_id;
+      document.getElementById('hid-qty-normal').value = carrinho.qty_normal || 0;
+      document.getElementById('hid-qty-jovem').value  = carrinho.qty_jovem  || 0;
+      document.getElementById('hid-qty-senior').value = carrinho.qty_senior || 0;
+      document.getElementById('btn-voltar').href = 'carrinho.php?evento_id=' + carrinho.evento_id;
 
-        const total = parseFloat(carrinho.total) || 0;
-        document.getElementById('btn-pagar').textContent = 'Pagar €' + total.toFixed(2).replace('.', ',');
-        document.getElementById('resumo-total').textContent = '€' + total.toFixed(2).replace('.', ',');
+      const total = parseFloat(carrinho.total) || 0;
+      document.getElementById('btn-pagar').textContent = 'Pagar €' + total.toFixed(2).replace('.', ',');
+      document.getElementById('resumo-total').textContent = '€' + total.toFixed(2).replace('.', ',');
 
-        const linhas = document.getElementById('resumo-linhas');
-        const labels = { qty_normal: 'Normal', qty_jovem: 'Jovem', qty_senior: 'Sénior' };
-        // We don't have prices here so we just show quantities
-        ['qty_normal','qty_jovem','qty_senior'].forEach(k => {
-          if (carrinho[k] > 0) {
-            const d = document.createElement('div');
-            d.className = 'order-row';
-            d.innerHTML = '<span>' + carrinho[k] + '× ' + labels[k] + '</span>';
-            linhas.appendChild(d);
-          }
-        });
-      }
-    </script>
+      const linhas = document.getElementById('resumo-linhas');
+      const labels = { qty_normal: 'Normal', qty_jovem: 'Jovem', qty_senior: 'Sénior' };
+      ['qty_normal','qty_jovem','qty_senior'].forEach(k => {
+        if (carrinho[k] > 0) {
+          const d = document.createElement('div');
+          d.className = 'order-row';
+          d.innerHTML = '<span>' + carrinho[k] + '× ' + labels[k] + '</span>';
+          linhas.appendChild(d);
+        }
+      });
+    }
+
+    // Formatação automática do número do cartão
+    document.getElementById('numero').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 16);
+      this.value = v.replace(/(.{4})/g, '$1 ').trim();
+    });
+
+    // Formatação automática da validade
+    document.getElementById('validade').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 4);
+      if (v.length >= 3) v = v.substring(0, 2) + '/' + v.substring(2);
+      this.value = v;
+    });
+
+    // Validação ao submeter
+    document.querySelector('form').addEventListener('submit', function (e) {
+      let ok = true;
+
+      const fNome  = document.getElementById('nome_cliente');
+      const fEmail = document.getElementById('email_cliente');
+      const fTel   = document.getElementById('telefone_cliente');
+      const fNum   = document.getElementById('numero');
+      const fVal   = document.getElementById('validade');
+      const fCvv   = document.getElementById('cvv');
+
+      if (!fNome.value.trim()) {
+        marcaErro(fNome, 'O nome é obrigatório.'); ok = false;
+      } else limpaErro(fNome);
+
+      if (!fEmail.value.trim()) {
+        marcaErro(fEmail, 'O email é obrigatório.'); ok = false;
+      } else if (!emailValido(fEmail.value)) {
+        marcaErro(fEmail, 'Formato de email inválido.'); ok = false;
+      } else limpaErro(fEmail);
+
+      if (!telefoneValido(fTel.value)) {
+        marcaErro(fTel, 'Telefone inválido (9 a 15 dígitos).'); ok = false;
+      } else limpaErro(fTel);
+
+      const numLimpo = fNum.value.replace(/\s/g, '');
+      if (numLimpo && !/^\d{16}$/.test(numLimpo)) {
+        marcaErro(fNum, 'O número do cartão deve ter 16 dígitos.'); ok = false;
+      } else limpaErro(fNum);
+
+      if (fVal.value && !/^(0[1-9]|1[0-2])\/\d{2}$/.test(fVal.value)) {
+        marcaErro(fVal, 'Formato inválido (MM/AA).'); ok = false;
+      } else limpaErro(fVal);
+
+      if (fCvv.value && !/^\d{3}$/.test(fCvv.value)) {
+        marcaErro(fCvv, 'O CVV deve ter 3 dígitos.'); ok = false;
+      } else limpaErro(fCvv);
+
+      if (!ok) e.preventDefault();
+    });
+  </script>
   </main>
 
 </body>
