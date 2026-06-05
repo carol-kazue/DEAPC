@@ -1,0 +1,4 @@
+.claude/
+.DS_Store
+*.db-shm
+*.db-wal
