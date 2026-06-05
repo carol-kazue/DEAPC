@@ -1,8 +1,8 @@
 <?php
-require_once 'scripts/db.php';
-require_once 'scripts/sessao.php';
+require_once '../scripts/db.php';
+require_once '../scripts/sessao.php';
 
-requirePerfil('administrador', 'login.html');
+requirePerfil('administrador', '../login.html');
 
 $db = getDB();
 
@@ -45,18 +45,18 @@ $estadoBadge = ['publicado' => 'badge-green', 'rascunho' => 'badge-gray', 'cance
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin — Casa da Música</title>
-  <link rel="stylesheet" href="styles/admin.css" />
+  <link rel="stylesheet" href="../styles/admin.css" />
 </head>
 <body>
 
   <nav class="nav-admin">
     <div class="nav-left">
-      <a href="admin.php" class="nav-brand">Casa da Música — Admin</a>
-      <a href="admin-eventos.php" class="btn-pill">Eventos</a>
+      <a href="index.php" class="nav-brand">Casa da Música — Admin</a>
+      <a href="eventos.php" class="btn-pill">Eventos</a>
     </div>
     <div class="nav-right">
       <span class="text-sm" style="margin-right:1rem;">Olá, <?= htmlspecialchars($admin['nome']) ?></span>
-      <a href="scripts/logout.php" class="btn-pill btn-pill-light">Sair</a>
+      <a href="../scripts/logout.php" class="btn-pill btn-pill-light">Sair</a>
     </div>
   </nav>
 
@@ -79,13 +79,13 @@ $estadoBadge = ['publicado' => 'badge-green', 'rascunho' => 'badge-gray', 'cance
     </div>
 
     <div style="display:flex; gap:1rem; margin-bottom:2rem; flex-wrap:wrap;">
-      <a href="admin-evento-criar.php" class="btn">+ Novo Evento</a>
-      <a href="admin-eventos.php" class="btn btn-pill-light">Ver Todos os Eventos</a>
+      <a href="evento-criar.php" class="btn">+ Novo Evento</a>
+      <a href="eventos.php" class="btn btn-pill-light">Ver Todos os Eventos</a>
     </div>
 
     <div class="sec-header">
       <h2 style="font-size:1.05rem; font-weight:bold;">Próximos Eventos</h2>
-      <a href="admin-eventos.php" class="btn btn-sm">Ver todos</a>
+      <a href="eventos.php" class="btn btn-sm">Ver todos</a>
     </div>
 
     <div class="table-wrap">
@@ -113,9 +113,9 @@ $estadoBadge = ['publicado' => 'badge-green', 'rascunho' => 'badge-gray', 'cance
             <td><?= (int)$ev['capacidade'] ?></td>
             <td><span class="badge <?= $estadoBadge[$ev['estado']] ?? 'badge-gray' ?>"><?= ucfirst(htmlspecialchars($ev['estado'])) ?></span></td>
             <td class="col-actions">
-              <a href="admin-evento-editar.php?id=<?= (int)$ev['id'] ?>" class="btn btn-sm">Editar</a>
+              <a href="evento-editar.php?id=<?= (int)$ev['id'] ?>" class="btn btn-sm">Editar</a>
               <?php if ($ev['estado'] !== 'cancelado'): ?>
-              <form method="POST" action="scripts/cancelar_evento.php" style="display:inline;"
+              <form method="POST" action="../scripts/cancelar_evento.php" style="display:inline;"
                     onsubmit="return confirm('Cancelar este evento?')">
                 <input type="hidden" name="evento_id" value="<?= (int)$ev['id'] ?>" />
                 <button type="submit" class="btn btn-sm btn-danger">Cancelar</button>

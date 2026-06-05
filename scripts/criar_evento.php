@@ -5,7 +5,7 @@ require_once 'sessao.php';
 requirePerfil('administrador', '../login.html');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ../admin-evento-criar.php');
+    header('Location: ../admin/evento-criar.php');
     exit;
 }
 
@@ -23,11 +23,11 @@ $preco_jovem         = (float)($_POST['preco_jovem']      ?? 0);
 $preco_senior        = (float)($_POST['preco_senior']     ?? 0);
 
 if ($nome === '' || $data === '' || $hora === '' || $sala === '' || $categoria === '') {
-    header('Location: ../admin-evento-criar.php?erro=campos_obrigatorios');
+    header('Location: ../admin/evento-criar.php?erro=campos_obrigatorios');
     exit;
 }
 if ($capacidade <= 0) {
-    header('Location: ../admin-evento-criar.php?erro=capacidade_invalida');
+    header('Location: ../admin/evento-criar.php?erro=capacidade_invalida');
     exit;
 }
 if (!in_array($estado, ['publicado', 'rascunho', 'cancelado'])) {
@@ -67,5 +67,5 @@ foreach (['normal' => $preco_normal, 'jovem' => $preco_jovem, 'senior' => $preco
 
 $db->exec('COMMIT');
 
-header('Location: ../admin-eventos.php?sucesso=criado');
+header('Location: ../admin/eventos.php?sucesso=criado');
 exit;

@@ -50,7 +50,7 @@ if ($next !== '' && !preg_match('/^https?:\/\//i', $next)) {
 }
 
 switch ($row['perfil']) {
-    case 'administrador': header('Location: ../admin.php');     break;
+    case 'administrador': header('Location: ../admin/');     break;
     case 'vendedor':      header('Location: ../vendedor.php');  break;
     default:              header('Location: ../cliente.php');   break;
 }

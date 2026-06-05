@@ -1,8 +1,8 @@
 <?php
-require_once 'scripts/db.php';
-require_once 'scripts/sessao.php';
+require_once '../scripts/db.php';
+require_once '../scripts/sessao.php';
 
-requirePerfil('administrador', 'login.html');
+requirePerfil('administrador', '../login.html');
 
 $db = getDB();
 
@@ -43,25 +43,25 @@ $admin = getUtilizador();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Eventos — Admin — Casa da Música</title>
-  <link rel="stylesheet" href="styles/admin.css" />
+  <link rel="stylesheet" href="../styles/admin.css" />
 </head>
 <body>
 
   <nav class="nav-admin">
     <div class="nav-left">
-      <a href="admin.php" class="nav-brand">Casa da Música — Admin</a>
-      <a href="admin-eventos.php" class="btn-pill">Eventos</a>
+      <a href="index.php" class="nav-brand">Casa da Música — Admin</a>
+      <a href="eventos.php" class="btn-pill">Eventos</a>
     </div>
     <div class="nav-right">
       <span class="text-sm" style="margin-right:1rem;">Olá, <?= htmlspecialchars($admin['nome']) ?></span>
-      <a href="scripts/logout.php" class="btn-pill btn-pill-light">Sair</a>
+      <a href="../scripts/logout.php" class="btn-pill btn-pill-light">Sair</a>
     </div>
   </nav>
 
   <main class="page">
     <div class="sec-header">
       <h1 class="page-title">Eventos</h1>
-      <a href="admin-evento-criar.php" class="btn">+ Novo Evento</a>
+      <a href="evento-criar.php" class="btn">+ Novo Evento</a>
     </div>
 
     <?php if ($sucesso && isset($msgs[$sucesso])): ?>
@@ -105,9 +105,9 @@ $admin = getUtilizador();
             <td><?= (int)$ev['vendidos'] ?> / <?= (int)$ev['capacidade'] ?></td>
             <td><span class="badge <?= $estadoBadge[$ev['estado']] ?? 'badge-gray' ?>"><?= ucfirst(htmlspecialchars($ev['estado'])) ?></span></td>
             <td class="col-actions">
-              <a href="admin-evento-editar.php?id=<?= (int)$ev['id'] ?>" class="btn btn-sm">Editar</a>
+              <a href="evento-editar.php?id=<?= (int)$ev['id'] ?>" class="btn btn-sm">Editar</a>
               <?php if ($ev['estado'] !== 'cancelado'): ?>
-              <form method="POST" action="scripts/cancelar_evento.php" style="display:inline;"
+              <form method="POST" action="../scripts/cancelar_evento.php" style="display:inline;"
                     onsubmit="return confirm('Cancelar «<?= htmlspecialchars(addslashes($ev['nome'])) ?>»?')">
                 <input type="hidden" name="evento_id" value="<?= (int)$ev['id'] ?>" />
                 <button type="submit" class="btn btn-sm btn-danger">Cancelar</button>

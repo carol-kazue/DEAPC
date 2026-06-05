@@ -1,12 +1,12 @@
 <?php
-require_once 'scripts/db.php';
-require_once 'scripts/sessao.php';
+require_once '../scripts/db.php';
+require_once '../scripts/sessao.php';
 
-requirePerfil('administrador', 'login.html');
+requirePerfil('administrador', '../login.html');
 
 $id = (int)($_GET['id'] ?? 0);
 if ($id === 0) {
-    header('Location: admin-eventos.php');
+    header('Location: eventos.php');
     exit;
 }
 
@@ -19,7 +19,7 @@ $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
 $ev = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
 
 if (!$ev) {
-    header('Location: admin-eventos.php');
+    header('Location: eventos.php');
     exit;
 }
 
@@ -47,30 +47,30 @@ $categorias = ['Sinfónico', 'Jazz', 'Câmara', 'Contemporâneo', 'World Music',
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Editar Evento — Casa da Música</title>
-  <link rel="stylesheet" href="styles/admin-evento-editar-criar.css" />
+  <link rel="stylesheet" href="../styles/admin-evento-editar-criar.css" />
 </head>
 <body>
 
   <nav class="nav-admin">
     <div class="nav-left">
-      <a href="admin.php" class="nav-brand">Casa da Música — Admin</a>
-      <a href="admin-eventos.php" class="btn-pill">Eventos</a>
+      <a href="index.php" class="nav-brand">Casa da Música — Admin</a>
+      <a href="eventos.php" class="btn-pill">Eventos</a>
     </div>
     <div class="nav-right">
       <span class="text-sm" style="margin-right:1rem;">Olá, <?= htmlspecialchars($admin['nome']) ?></span>
-      <a href="scripts/logout.php" class="btn-pill btn-pill-light">Sair</a>
+      <a href="../scripts/logout.php" class="btn-pill btn-pill-light">Sair</a>
     </div>
   </nav>
 
   <main class="page" style="max-width:800px;">
-    <p class="text-sm mb-2"><a href="admin-eventos.php">← Eventos</a></p>
+    <p class="text-sm mb-2"><a href="eventos.php">← Eventos</a></p>
     <h1 class="page-title">Editar Evento</h1>
 
     <?php if ($erro && isset($msgs_erro[$erro])): ?>
     <div class="alert alert-danger mb-2"><?= $msgs_erro[$erro] ?></div>
     <?php endif; ?>
 
-    <form action="scripts/editar_evento.php" method="POST">
+    <form action="../scripts/editar_evento.php" method="POST">
     <input type="hidden" name="evento_id" value="<?= (int)$ev['id'] ?>" />
     <div class="form-card">
 
@@ -185,7 +185,7 @@ $categorias = ['Sinfónico', 'Jazz', 'Câmara', 'Contemporâneo', 'World Music',
 
       <div class="form-actions">
         <button type="submit" class="btn btn-success">Guardar Alterações</button>
-        <a href="admin-eventos.php" class="btn btn-pill-light">Cancelar</a>
+        <a href="eventos.php" class="btn btn-pill-light">Cancelar</a>
       </div>
     </div>
     </form>
