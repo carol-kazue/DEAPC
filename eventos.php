@@ -8,38 +8,49 @@ $pesquisa  = trim($_GET['pesquisa']  ?? '');
 $data_de   = trim($_GET['data_de']   ?? '');
 $data_ate  = trim($_GET['data_ate']  ?? '');
 $categoria = trim($_GET['categoria'] ?? '');
+$pagina    = max(1, (int)($_GET['pagina'] ?? 1));
+$por_pag   = 6;
 
-$sql = 'SELECT e.id, e.nome, e.data, e.hora, e.sala, e.categoria,
-               MIN(p.preco) AS preco_min
-        FROM eventos e
-        LEFT JOIN precos p ON p.evento_id = e.id
-        WHERE e.estado = \'publicado\'';
-
+$where  = "WHERE e.estado = 'publicado'";
 $params = [];
 
 if ($pesquisa !== '') {
-    $sql .= ' AND e.nome LIKE :pesquisa';
+    $where .= ' AND e.nome LIKE :pesquisa';
     $params[':pesquisa'] = '%' . $pesquisa . '%';
 }
 if ($data_de !== '') {
-    $sql .= ' AND e.data >= :data_de';
+    $where .= ' AND e.data >= :data_de';
     $params[':data_de'] = $data_de;
 }
 if ($data_ate !== '') {
-    $sql .= ' AND e.data <= :data_ate';
+    $where .= ' AND e.data <= :data_ate';
     $params[':data_ate'] = $data_ate;
 }
 if ($categoria !== '') {
-    $sql .= ' AND e.categoria = :categoria';
+    $where .= ' AND e.categoria = :categoria';
     $params[':categoria'] = $categoria;
 }
 
-$sql .= ' GROUP BY e.id ORDER BY e.data ASC';
+// Total de eventos (para calcular páginas)
+$stmtTotal = $db->prepare("SELECT COUNT(DISTINCT e.id) FROM eventos e $where");
+foreach ($params as $k => $v) $stmtTotal->bindValue($k, $v, SQLITE3_TEXT);
+$total       = (int)$stmtTotal->execute()->fetchArray()[0];
+$total_pag   = max(1, (int)ceil($total / $por_pag));
+$pagina      = min($pagina, $total_pag);
+$offset      = ($pagina - 1) * $por_pag;
+
+// Eventos da página atual
+$sql = "SELECT e.id, e.nome, e.data, e.hora, e.sala, e.categoria,
+               MIN(p.preco) AS preco_min
+        FROM eventos e
+        LEFT JOIN precos p ON p.evento_id = e.id
+        $where
+        GROUP BY e.id
+        ORDER BY e.data ASC
+        LIMIT $por_pag OFFSET $offset";
 
 $stmt = $db->prepare($sql);
-foreach ($params as $k => $v) {
-    $stmt->bindValue($k, $v, SQLITE3_TEXT);
-}
+foreach ($params as $k => $v) $stmt->bindValue($k, $v, SQLITE3_TEXT);
 $res = $stmt->execute();
 $eventos = [];
 while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
@@ -47,6 +58,15 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
 }
 
 $categorias = ['Sinfónico', 'Jazz', 'Câmara', 'Contemporâneo', 'World Music', 'Fado', 'Outro'];
+
+function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, string $categoria): string {
+    $q = ['pagina' => $p];
+    if ($pesquisa)  $q['pesquisa']  = $pesquisa;
+    if ($data_de)   $q['data_de']   = $data_de;
+    if ($data_ate)  $q['data_ate']  = $data_ate;
+    if ($categoria) $q['categoria'] = $categoria;
+    return 'eventos.php?' . http_build_query($q);
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -55,20 +75,77 @@ $categorias = ['Sinfónico', 'Jazz', 'Câmara', 'Contemporâneo', 'World Music',
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Eventos — Casa da Música</title>
   <link rel="stylesheet" href="styles/eventos.css" />
+  <style>
+    /* Dropdown nav */
+    .nav-dropdown { position:relative; }
+    .nav-dropdown-toggle {
+      background:none; border:1px solid currentColor; border-radius:20px;
+      padding:5px 14px; cursor:pointer; font:inherit; color:inherit;
+      display:flex; align-items:center; gap:6px;
+    }
+    .nav-dropdown-toggle:hover { background:rgba(0,0,0,.06); }
+    .nav-dropdown-menu {
+      display:none; position:absolute; right:0; top:calc(100% + 6px);
+      background:#fff; border:1px solid #ddd; border-radius:8px;
+      box-shadow:0 4px 14px rgba(0,0,0,.12); min-width:160px;
+      overflow:hidden; z-index:200;
+    }
+    .nav-dropdown-menu a {
+      display:block; padding:10px 16px; font-size:.9rem;
+      color:#222; text-decoration:none; white-space:nowrap;
+    }
+    .nav-dropdown-menu a:hover { background:#f5f5f5; }
+    .nav-dropdown-menu .menu-sep {
+      border:none; border-top:1px solid #eee; margin:2px 0;
+    }
+    .nav-dropdown.open .nav-dropdown-menu { display:block; }
+
+    /* Paginação */
+    .paginacao {
+      display:flex; justify-content:center; align-items:center;
+      gap:6px; margin:2rem 0 1rem;
+    }
+    .pg-btn {
+      min-width:36px; height:36px; padding:0 10px;
+      border:1px solid #ddd; border-radius:6px; background:#fff;
+      cursor:pointer; font-size:.9rem; color:#333;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .pg-btn:hover:not(:disabled) { background:#f0f0f0; }
+    .pg-btn.ativo { background:#1a1a1a; color:#fff; border-color:#1a1a1a; font-weight:bold; }
+    .pg-btn:disabled { opacity:.4; cursor:default; }
+    .pg-btn a { color:inherit; text-decoration:none; display:block; padding:0 4px; }
+    .pg-info { font-size:.85rem; color:#666; margin-left:8px; }
+  </style>
 </head>
 <body>
 
   <nav>
     <div class="nav-left">
-      <a href="index.html" class="nav-brand">Casa da Música</a>
+      <a href="index.php" class="nav-brand">Casa da Música</a>
       <a href="eventos.php" class="btn-pill">Eventos</a>
     </div>
     <div class="nav-right">
       <?php if (isLoggedIn()): $u = getUtilizador(); ?>
-        <a href="<?= $u['perfil'] === 'administrador' ? 'admin.php' : ($u['perfil'] === 'vendedor' ? 'vendedor.php' : 'cliente.php') ?>" class="btn-pill">
-          <?= htmlspecialchars($u['nome']) ?>
-        </a>
-        <a href="scripts/logout.php" class="btn-pill btn-pill-light">Sair</a>
+        <div class="nav-dropdown" id="nav-dd">
+          <button class="nav-dropdown-toggle" onclick="toggleDrop()" type="button">
+            <?= htmlspecialchars($u['nome']) ?> <span style="font-size:.7rem;">▾</span>
+          </button>
+          <div class="nav-dropdown-menu">
+            <?php if ($u['perfil'] === 'administrador'): ?>
+              <a href="admin.php">Dashboard</a>
+              <a href="admin-eventos.php">Gerir Eventos</a>
+              <hr class="menu-sep">
+            <?php elseif ($u['perfil'] === 'vendedor'): ?>
+              <a href="vendedor.php">Área do Vendedor</a>
+              <hr class="menu-sep">
+            <?php else: ?>
+              <a href="cliente.php">A Minha Conta</a>
+              <hr class="menu-sep">
+            <?php endif; ?>
+            <a href="scripts/logout.php">Sair</a>
+          </div>
+        </div>
       <?php else: ?>
         <a href="login.html" class="btn-pill">Entrar</a>
       <?php endif; ?>
@@ -111,15 +188,11 @@ $categorias = ['Sinfónico', 'Jazz', 'Câmara', 'Contemporâneo', 'World Music',
     </form>
 
     <?php if (empty($eventos)): ?>
-      <p class="text-sm" style="margin-top:2rem;" id="sem-resultados">Nenhum evento encontrado.</p>
+      <p class="text-sm" style="margin-top:2rem;">Nenhum evento encontrado.</p>
     <?php else: ?>
-    <p class="text-sm" id="sem-resultados" style="display:none; margin-top:1rem;">Nenhum evento corresponde à pesquisa.</p>
     <div class="cards-grid" id="grelha-eventos">
       <?php foreach ($eventos as $ev): ?>
-      <div class="card"
-           data-nome="<?= htmlspecialchars(strtolower($ev['nome'])) ?>"
-           data-categoria="<?= htmlspecialchars(strtolower($ev['categoria'])) ?>"
-           data-sala="<?= htmlspecialchars(strtolower($ev['sala'])) ?>">
+      <div class="card">
         <div class="img-box img-box-md"></div>
         <p class="card-title"><?= htmlspecialchars($ev['nome']) ?></p>
         <p class="card-meta">
@@ -139,10 +212,54 @@ $categorias = ['Sinfónico', 'Jazz', 'Câmara', 'Contemporâneo', 'World Music',
       </div>
       <?php endforeach; ?>
     </div>
+
+    <!-- Paginação -->
+    <?php if ($total_pag > 1): ?>
+    <div class="paginacao">
+      <!-- Anterior -->
+      <?php if ($pagina > 1): ?>
+        <button class="pg-btn"><a href="<?= htmlspecialchars(urlPag($pagina - 1, $pesquisa, $data_de, $data_ate, $categoria)) ?>">‹</a></button>
+      <?php else: ?>
+        <button class="pg-btn" disabled>‹</button>
+      <?php endif; ?>
+
+      <!-- Números de página -->
+      <?php
+      $inicio = max(1, $pagina - 2);
+      $fim    = min($total_pag, $pagina + 2);
+      if ($inicio > 1): ?>
+        <button class="pg-btn"><a href="<?= htmlspecialchars(urlPag(1, $pesquisa, $data_de, $data_ate, $categoria)) ?>">1</a></button>
+        <?php if ($inicio > 2): ?><span style="padding:0 4px;color:#aaa;">…</span><?php endif; ?>
+      <?php endif; ?>
+
+      <?php for ($i = $inicio; $i <= $fim; $i++): ?>
+        <?php if ($i === $pagina): ?>
+          <button class="pg-btn ativo"><?= $i ?></button>
+        <?php else: ?>
+          <button class="pg-btn"><a href="<?= htmlspecialchars(urlPag($i, $pesquisa, $data_de, $data_ate, $categoria)) ?>"><?= $i ?></a></button>
+        <?php endif; ?>
+      <?php endfor; ?>
+
+      <?php if ($fim < $total_pag): ?>
+        <?php if ($fim < $total_pag - 1): ?><span style="padding:0 4px;color:#aaa;">…</span><?php endif; ?>
+        <button class="pg-btn"><a href="<?= htmlspecialchars(urlPag($total_pag, $pesquisa, $data_de, $data_ate, $categoria)) ?>"><?= $total_pag ?></a></button>
+      <?php endif; ?>
+
+      <!-- Próxima -->
+      <?php if ($pagina < $total_pag): ?>
+        <button class="pg-btn"><a href="<?= htmlspecialchars(urlPag($pagina + 1, $pesquisa, $data_de, $data_ate, $categoria)) ?>">›</a></button>
+      <?php else: ?>
+        <button class="pg-btn" disabled>›</button>
+      <?php endif; ?>
+
+      <span class="pg-info"><?= $pagina ?> / <?= $total_pag ?> &nbsp;(<?= $total ?> eventos)</span>
+    </div>
+    <?php endif; ?>
+
     <?php endif; ?>
   </main>
 
-  <!-- Painel de informação do projeto (ponto 2b do guião) -->
+  <!-- Painel de informação do projeto -->
   <button id="btn-sobre" onclick="toggleSobre()" title="Sobre o projeto"
     style="position:fixed; bottom:1.5rem; right:1.5rem; z-index:100;
            background:#1a1a1a; color:#fff; border:none; border-radius:50%;
@@ -173,47 +290,27 @@ $categorias = ['Sinfónico', 'Jazz', 'Câmara', 'Contemporâneo', 'World Music',
   </div>
 
   <script>
-    // --- Filtro live de eventos (ponto 2a — manipulação DOM) ---
-    const inputPesquisa = document.getElementById('pesquisa');
-    const selectCat     = document.getElementById('categoria');
-
-    function filtrarCards() {
-      const texto = (inputPesquisa ? inputPesquisa.value.toLowerCase() : '');
-      const cat   = (selectCat ? selectCat.value.toLowerCase() : '');
-      const cards = document.querySelectorAll('#grelha-eventos .card');
-      let visiveis = 0;
-      cards.forEach(function (card) {
-        const nome    = card.dataset.nome     || '';
-        const catCard = card.dataset.categoria || '';
-        const okTexto = !texto || nome.includes(texto);
-        const okCat   = !cat   || catCard === cat;
-        if (okTexto && okCat) {
-          card.style.display = '';
-          visiveis++;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-      const semRes = document.getElementById('sem-resultados');
-      if (semRes) semRes.style.display = visiveis === 0 ? 'block' : 'none';
+    // Dropdown do nav
+    function toggleDrop() {
+      document.getElementById('nav-dd').classList.toggle('open');
     }
+    document.addEventListener('click', function (e) {
+      const dd = document.getElementById('nav-dd');
+      if (dd && !dd.contains(e.target)) dd.classList.remove('open');
+    });
 
-    if (inputPesquisa) inputPesquisa.addEventListener('input', filtrarCards);
-    if (selectCat)     selectCat.addEventListener('change', filtrarCards);
-
-    // --- Toggle painel de informação do projeto (ponto 2b) ---
+    // Toggle painel sobre o projeto
     function toggleSobre() {
       const painel = document.getElementById('painel-sobre');
       const aberto = painel.style.display !== 'none';
       painel.style.display = aberto ? 'none' : 'block';
       document.getElementById('btn-sobre').textContent = aberto ? 'ⓘ' : '✕';
     }
-
-    // Fecha ao clicar fora
     document.addEventListener('click', function (e) {
       const painel = document.getElementById('painel-sobre');
       const btn    = document.getElementById('btn-sobre');
-      if (painel.style.display !== 'none' && !painel.contains(e.target) && e.target !== btn) {
+      if (painel && painel.style.display !== 'none'
+          && !painel.contains(e.target) && e.target !== btn) {
         painel.style.display = 'none';
         btn.textContent = 'ⓘ';
       }
