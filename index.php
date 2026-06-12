@@ -1,3 +1,3 @@
 <?php
-header('Location: eventos.php');
+header('Location: eventos.html');
 exit;

@@ -122,8 +122,8 @@ function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, str
 
   <nav>
     <div class="nav-left">
-      <a href="index.php" class="nav-brand">Casa da Música</a>
-      <a href="eventos.php" class="btn-pill">Eventos</a>
+      <a href="index.html" class="nav-brand">Casa da Música</a>
+      <a href="eventos.html" class="btn-pill">Eventos</a>
     </div>
     <div class="nav-right">
       <?php if (isLoggedIn()): $u = getUtilizador(); ?>
@@ -155,7 +155,7 @@ function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, str
   <main class="page">
     <h1 class="page-title">Eventos</h1>
 
-    <form method="GET" action="eventos.php" class="search-bar">
+    <form method="GET" action="eventos.html" class="search-bar">
       <div class="form-group">
         <label for="pesquisa">Pesquisar</label>
         <input type="text" id="pesquisa" name="pesquisa"
