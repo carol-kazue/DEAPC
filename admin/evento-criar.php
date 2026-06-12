@@ -12,7 +12,7 @@ $msgs_erro = [
 ];
 $admin = getUtilizador();
 $salas      = ['Sala Suggia', 'Sala 2', 'Grande Auditório', 'Terraço', 'Outro'];
-$categorias = ['Sinfónico', 'Jazz', 'Câmara', 'Contemporâneo', 'World Music', 'Fado', 'Outro'];
+$categorias = ['Sinfónico', 'Música Clássica', 'Música de Câmara', 'Jazz', 'World Music', 'Música Popular', 'Música Contemporânea', 'Música Coral', 'Ópera', 'Hip-Hop', 'Rock', 'Fado', 'Outro'];
 ?>
 <!DOCTYPE html>
 <html lang="pt">

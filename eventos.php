@@ -57,7 +57,7 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
     $eventos[] = $row;
 }
 
-$categorias = ['Sinfónico', 'Jazz', 'Câmara', 'Contemporâneo', 'World Music', 'Fado', 'Outro'];
+$categorias = ['Sinfónico', 'Música Clássica', 'Música de Câmara', 'Jazz', 'World Music', 'Música Popular', 'Música Contemporânea', 'Música Coral', 'Ópera', 'Hip-Hop', 'Rock', 'Fado', 'Outro'];
 
 function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, string $categoria): string {
     $q = ['pagina' => $p];
