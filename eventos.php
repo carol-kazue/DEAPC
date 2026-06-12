@@ -79,24 +79,25 @@ function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, str
     /* Dropdown nav */
     .nav-dropdown { position:relative; }
     .nav-dropdown-toggle {
-      background:none; border:1px solid currentColor; border-radius:20px;
-      padding:5px 14px; cursor:pointer; font:inherit; color:inherit;
-      display:flex; align-items:center; gap:6px;
+      background:none; border:1px solid #c9a83c; border-radius:20px;
+      padding:5px 14px; cursor:pointer; font:inherit; color:#c9a83c;
+      display:flex; align-items:center; gap:6px; transition:background .15s, color .15s;
     }
-    .nav-dropdown-toggle:hover { background:rgba(0,0,0,.06); }
+    .nav-dropdown-toggle:hover { background:#c9a83c; color:#0b0b14; }
     .nav-dropdown-menu {
       display:none; position:absolute; right:0; top:calc(100% + 6px);
-      background:#fff; border:1px solid #ddd; border-radius:8px;
-      box-shadow:0 4px 14px rgba(0,0,0,.12); min-width:160px;
+      background:#12121f; border:1px solid #252535; border-radius:6px;
+      box-shadow:0 6px 20px rgba(0,0,0,.5); min-width:170px;
       overflow:hidden; z-index:200;
     }
     .nav-dropdown-menu a {
       display:block; padding:10px 16px; font-size:.9rem;
-      color:#222; text-decoration:none; white-space:nowrap;
+      color:#f0ece4; text-decoration:none; white-space:nowrap;
+      transition:background .12s, color .12s;
     }
-    .nav-dropdown-menu a:hover { background:#f5f5f5; }
+    .nav-dropdown-menu a:hover { background:#1e1e30; color:#c9a83c; }
     .nav-dropdown-menu .menu-sep {
-      border:none; border-top:1px solid #eee; margin:2px 0;
+      border:none; border-top:1px solid #252535; margin:2px 0;
     }
     .nav-dropdown.open .nav-dropdown-menu { display:block; }
 
@@ -107,15 +108,16 @@ function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, str
     }
     .pg-btn {
       min-width:36px; height:36px; padding:0 10px;
-      border:1px solid #ddd; border-radius:6px; background:#fff;
-      cursor:pointer; font-size:.9rem; color:#333;
+      border:1px solid #252535; border-radius:4px; background:#12121f;
+      cursor:pointer; font-size:.9rem; color:#9e9080;
       display:flex; align-items:center; justify-content:center;
+      transition:border-color .15s, color .15s;
     }
-    .pg-btn:hover:not(:disabled) { background:#f0f0f0; }
-    .pg-btn.ativo { background:#1a1a1a; color:#fff; border-color:#1a1a1a; font-weight:bold; }
-    .pg-btn:disabled { opacity:.4; cursor:default; }
+    .pg-btn:hover:not(:disabled) { border-color:#c9a83c; color:#c9a83c; }
+    .pg-btn.ativo { background:#c9a83c; color:#0b0b14; border-color:#c9a83c; font-weight:bold; }
+    .pg-btn:disabled { opacity:.35; cursor:default; }
     .pg-btn a { color:inherit; text-decoration:none; display:block; padding:0 4px; }
-    .pg-info { font-size:.85rem; color:#666; margin-left:8px; }
+    .pg-info { font-size:.85rem; color:#5a5550; margin-left:8px; }
   </style>
 </head>
 <body>
@@ -262,30 +264,30 @@ function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, str
   <!-- Painel de informação do projeto -->
   <button id="btn-sobre" onclick="toggleSobre()" title="Sobre o projeto"
     style="position:fixed; bottom:1.5rem; right:1.5rem; z-index:100;
-           background:#1a1a1a; color:#fff; border:none; border-radius:50%;
+           background:#c9a83c; color:#0b0b14; border:none; border-radius:50%;
            width:46px; height:46px; font-size:1.2rem; cursor:pointer;
-           box-shadow:0 2px 8px rgba(0,0,0,.35);">ⓘ</button>
+           box-shadow:0 2px 12px rgba(201,168,60,.4); font-weight:bold;">ⓘ</button>
 
   <div id="painel-sobre"
     style="display:none; position:fixed; bottom:4.5rem; right:1.5rem; z-index:100;
-           background:#fff; border:1px solid #ddd; border-radius:10px;
-           box-shadow:0 4px 16px rgba(0,0,0,.15); padding:1.2rem 1.5rem;
-           max-width:320px; font-size:0.88rem; line-height:1.6;">
-    <p style="font-weight:bold; font-size:1rem; margin-bottom:0.5rem;">Casa da Música — Sistema de Bilhética</p>
-    <p style="color:#555; margin-bottom:0.8rem;">
+           background:#12121f; border:1px solid #252535; border-radius:8px;
+           box-shadow:0 6px 24px rgba(0,0,0,.6); padding:1.2rem 1.5rem;
+           max-width:320px; font-size:0.88rem; line-height:1.6; color:#f0ece4;">
+    <p style="font-weight:bold; font-size:1rem; margin-bottom:0.5rem; color:#c9a83c;">Casa da Música — Sistema de Bilhética</p>
+    <p style="color:#9e9080; margin-bottom:0.8rem;">
       Aplicação web para gestão e venda de bilhetes da Casa da Música do Porto.
       Permite a compra online de bilhetes, gestão de eventos pelo administrador
       e emissão presencial pelo vendedor.
     </p>
-    <hr style="margin:0.6rem 0;" />
+    <hr style="margin:0.6rem 0; border:none; border-top:1px solid #252535;" />
     <p style="font-weight:bold; margin-bottom:0.3rem;">Grupo 18 — DEAPC 2025/26</p>
-    <ul style="margin:0; padding-left:1.2rem; color:#333;">
+    <ul style="margin:0; padding-left:1.2rem; color:#c8c0b4;">
       <li>Ana Inada — 1242098</li>
       <li>Pedro Silva — 1242116</li>
       <li>Paulo Costa — 1231470</li>
     </ul>
-    <p style="margin-top:0.6rem; color:#888; font-size:0.78rem;">
-      <a href="https://github.com/carol-kazue/DEAPC" target="_blank" style="color:#555;">github.com/carol-kazue/DEAPC</a>
+    <p style="margin-top:0.6rem; color:#5a5550; font-size:0.78rem;">
+      <a href="https://github.com/carol-kazue/DEAPC" target="_blank" style="color:#c9a83c; text-decoration:none;">github.com/carol-kazue/DEAPC</a>
     </p>
   </div>
 
