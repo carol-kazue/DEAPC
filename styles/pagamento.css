@@ -1,13 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body { font-family: sans-serif; color: #222; background: #fff; }
+body { font-family: 'Inter', system-ui, sans-serif; color: #f0ece4; background: #0b0b14; }
 
 /* ── NAV ── */
 nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #d9d9d9;
+  background: #08080f;
+  border-bottom: 1px solid #252535;
   padding: 0 2.5rem;
   height: 70px;
   position: sticky;
@@ -16,57 +19,68 @@ nav {
 }
 .nav-left  { display: flex; align-items: center; gap: 1rem; }
 .nav-right { display: flex; align-items: center; gap: 1.5rem; }
-.nav-brand { font-weight: bold; font-size: 1.1rem; color: #222; text-decoration: none; }
-.nav-icon  { background: none; border: none; cursor: pointer; color: #222; line-height: 0; display: inline-flex; }
+.nav-brand {
+  font-family: 'Cinzel', Georgia, serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #c9a83c;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.nav-icon  { background: none; border: none; cursor: pointer; color: #f0ece4; line-height: 0; display: inline-flex; transition: color 0.15s; }
+.nav-icon:hover { color: #c9a83c; }
 
 .btn-pill {
-  background: #5c5c5c;
-  color: #fff;
-  border: none;
+  background: transparent;
+  color: #c9a83c;
+  border: 1px solid #c9a83c;
   border-radius: 999px;
-  padding: 0.42rem 1.2rem;
-  font-size: 0.95rem;
+  padding: 0.38rem 1.1rem;
+  font-size: 0.9rem;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
   white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
 }
-.btn-pill:hover       { background: #3a3a3a; }
-.btn-pill-light       { background: #8a8a8a; }
-.btn-pill-light:hover { background: #6a6a6a; }
+.btn-pill:hover       { background: #c9a83c; color: #0b0b14; }
+.btn-pill-light       { border-color: #3a3a55; color: #9e9080; }
+.btn-pill-light:hover { background: #3a3a55; color: #f0ece4; }
 
 /* ── PAGE WRAPPER ── */
 .page { padding: 2rem 4rem; max-width: 1200px; margin: 0 auto; }
 
 /* ── STEPS ── */
 .steps    { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
-.step-dot { width: 11px; height: 11px; border-radius: 50%; background: #bbb; }
-.step-dot.active { background: #5c5c5c; }
+.step-dot { width: 11px; height: 11px; border-radius: 50%; background: #252535; }
+.step-dot.active { background: #c9a83c; box-shadow: 0 0 6px rgba(201,168,60,.5); }
 
 /* ── ORDER SUMMARY ── */
-.order-box   { background: #ececec; padding: 1.2rem; margin-bottom: 1.5rem; }
-.order-row   { display: flex; justify-content: space-between; padding: 0.25rem 0; font-size: 0.9rem; }
-.order-total { font-weight: bold; font-size: 1rem; border-top: 1px solid #bbb; margin-top: 0.5rem; padding-top: 0.6rem; }
+.order-box   { background: #12121f; border: 1px solid #252535; padding: 1.2rem; margin-bottom: 1.5rem; border-radius: 4px; }
+.order-row   { display: flex; justify-content: space-between; padding: 0.25rem 0; font-size: 0.9rem; color: #9e9080; }
+.order-total { font-weight: bold; font-size: 1rem; color: #c9a83c; border-top: 1px solid #252535; margin-top: 0.5rem; padding-top: 0.6rem; }
 
 /* ── BUTTONS ── */
 .btn {
-  background: #5c5c5c;
-  color: #fff;
+  background: #c9a83c;
+  color: #0b0b14;
   border: none;
   border-radius: 999px;
-  padding: 0.42rem 1.3rem;
+  padding: 0.45rem 1.4rem;
   font-size: 0.92rem;
+  font-weight: 600;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
   white-space: nowrap;
+  transition: background 0.15s;
 }
-.btn:hover { background: #3a3a3a; }
+.btn:hover { background: #dfc060; }
 
 /* ── FORMS ── */
-.form-card { background: #d9d9d9; padding: 2rem; }
-.form-group        { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 1rem; }
-.form-group label  { font-size: 0.88rem; font-weight: 600; }
+.form-card { background: #12121f; border: 1px solid #252535; padding: 2rem; border-radius: 4px; }
+.form-group        { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+.form-group label  { font-size: 0.78rem; font-weight: 500; color: #c9a83c; letter-spacing: 0.06em; text-transform: uppercase; }
 .form-row          { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
 input[type="text"],
@@ -77,14 +91,20 @@ input[type="date"],
 input[type="time"],
 select,
 textarea {
-  border: 1px solid #bbb;
-  padding: 0.45rem 0.7rem;
+  border: 1px solid #2a2a40;
+  padding: 0.5rem 0.8rem;
   font-size: 0.92rem;
-  background: #f5f5f5;
+  background: #0f0f20;
+  color: #f0ece4;
   width: 100%;
   font-family: inherit;
-  border-radius: 2px;
+  border-radius: 3px;
+  outline: none;
+  transition: border-color 0.15s;
 }
+input:focus, select:focus, textarea:focus { border-color: #c9a83c; }
+input::placeholder { color: #3a3a55; }
+select option { background: #0f0f20; }
 
 /* ── UTILITY ── */
 .mt-2 { margin-top: 1rem; }
@@ -92,4 +112,4 @@ textarea {
 .mb-2 { margin-bottom: 1rem; }
 .text-bold   { font-weight: bold; }
 .text-center { text-align: center; }
-.text-sm     { font-size: 0.85rem; color: #555; }
+.text-sm     { font-size: 0.85rem; color: #9e9080; }
