@@ -11,7 +11,7 @@ $categoria = trim($_GET['categoria'] ?? '');
 $pagina    = max(1, (int)($_GET['pagina'] ?? 1));
 $por_pag   = 6;
 
-$where  = "WHERE e.estado = 'publicado'";
+$where  = "WHERE e.estado = 'publicado' AND e.data >= date('now')";
 $params = [];
 
 if ($pesquisa !== '') {
@@ -218,14 +218,12 @@ function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, str
     <!-- Paginação -->
     <?php if ($total_pag > 1): ?>
     <div class="paginacao">
-      <!-- Anterior -->
       <?php if ($pagina > 1): ?>
         <button class="pg-btn"><a href="<?= htmlspecialchars(urlPag($pagina - 1, $pesquisa, $data_de, $data_ate, $categoria)) ?>">‹</a></button>
       <?php else: ?>
         <button class="pg-btn" disabled>‹</button>
       <?php endif; ?>
 
-      <!-- Números de página -->
       <?php
       $inicio = max(1, $pagina - 2);
       $fim    = min($total_pag, $pagina + 2);
@@ -247,7 +245,6 @@ function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, str
         <button class="pg-btn"><a href="<?= htmlspecialchars(urlPag($total_pag, $pesquisa, $data_de, $data_ate, $categoria)) ?>"><?= $total_pag ?></a></button>
       <?php endif; ?>
 
-      <!-- Próxima -->
       <?php if ($pagina < $total_pag): ?>
         <button class="pg-btn"><a href="<?= htmlspecialchars(urlPag($pagina + 1, $pesquisa, $data_de, $data_ate, $categoria)) ?>">›</a></button>
       <?php else: ?>
@@ -292,7 +289,6 @@ function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, str
   </div>
 
   <script>
-    // Dropdown do nav
     function toggleDrop() {
       document.getElementById('nav-dd').classList.toggle('open');
     }
@@ -301,7 +297,6 @@ function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, str
       if (dd && !dd.contains(e.target)) dd.classList.remove('open');
     });
 
-    // Toggle painel sobre o projeto
     function toggleSobre() {
       const painel = document.getElementById('painel-sobre');
       const aberto = painel.style.display !== 'none';
