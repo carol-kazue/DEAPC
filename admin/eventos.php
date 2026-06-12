@@ -51,6 +51,7 @@ $admin = getUtilizador();
     <div class="nav-left">
       <a href="index.php" class="nav-brand">Casa da Música — Admin</a>
       <a href="eventos.php" class="btn-pill">Eventos</a>
+      <a href="../bilhetes.php" class="btn-pill">Bilhetes</a>
     </div>
     <div class="nav-right">
       <span class="text-sm" style="margin-right:1rem;">Olá, <?= htmlspecialchars($admin['nome']) ?></span>

@@ -48,6 +48,7 @@ while ($p = $resP->fetchArray(SQLITE3_ASSOC)) {
   <nav class="nav-vendor">
     <div class="nav-left">
       <a href="index.php" class="nav-brand">Casa da Música</a>
+      <a href="bilhetes.php" class="btn-pill">Bilhetes</a>
     </div>
     <div class="nav-right">
       <span style="font-size:.88rem; color:#9e9080; margin-right:1rem;">Olá, <?= htmlspecialchars($vendedor['nome']) ?></span>
