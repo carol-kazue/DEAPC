@@ -16,7 +16,7 @@ $sql = 'SELECT e.id, e.nome, e.data, e.hora, e.sala, e.categoria, e.capacidade, 
 if ($filtro_estado !== '') {
     $sql .= ' WHERE e.estado = :estado';
 }
-$sql .= ' GROUP BY e.id ORDER BY e.data DESC';
+$sql .= ' GROUP BY e.id ORDER BY e.data ASC';
 
 $stmt = $db->prepare($sql);
 if ($filtro_estado !== '') {
