@@ -115,10 +115,10 @@ $estadoBadge = ['publicado' => 'badge-green', 'rascunho' => 'badge-gray', 'cance
             <td class="col-actions">
               <a href="evento-editar.php?id=<?= (int)$ev['id'] ?>" class="btn btn-sm">Editar</a>
               <?php if ($ev['estado'] !== 'cancelado'): ?>
-              <form method="POST" action="../scripts/cancelar_evento.php" style="display:inline;"
-                    onsubmit="return confirm('Cancelar este evento?')">
+              <form method="POST" action="../scripts/cancelar_evento.php" style="display:inline;">
                 <input type="hidden" name="evento_id" value="<?= (int)$ev['id'] ?>" />
-                <button type="submit" class="btn btn-sm btn-danger">Cancelar</button>
+                <button type="button" class="btn btn-sm btn-danger"
+                  onclick="pedirConfirmacao(this.closest('form'), '<?= htmlspecialchars(addslashes($ev['nome'])) ?>')">Cancelar</button>
               </form>
               <?php endif; ?>
             </td>
@@ -129,5 +129,57 @@ $estadoBadge = ['publicado' => 'badge-green', 'rascunho' => 'badge-gray', 'cance
     </div>
   </main>
 
+
+<!-- Modal de confirmação de cancelamento -->
+<div id="modal-cancelar" style="display:none; position:fixed; inset:0; z-index:500;
+     background:rgba(0,0,0,.75); backdrop-filter:blur(3px);
+     align-items:center; justify-content:center;">
+  <div style="background:#12121f; border:1px solid #c9a83c; border-radius:6px;
+              padding:2rem; max-width:420px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,.7);">
+    <p style="font-family:'Cinzel',Georgia,serif; font-size:1.1rem; color:#c9a83c; margin-bottom:.5rem;">Cancelar Evento</p>
+    <p style="color:#c8c0b4; font-size:.92rem; margin-bottom:1.5rem;">
+      Tens a certeza que queres cancelar <strong id="modal-nome" style="color:#f0ece4;"></strong>?
+      Esta ação não pode ser desfeita.
+    </p>
+    <div style="display:flex; gap:.8rem; justify-content:flex-end;">
+      <button onclick="fecharModal()" type="button"
+        style="background:transparent; border:1px solid #3a3a55; color:#9e9080; border-radius:999px;
+               padding:.4rem 1.2rem; cursor:pointer; font-size:.9rem; transition:background .15s;"
+        onmouseover="this.style.background='#3a3a55'" onmouseout="this.style.background='transparent'">
+        Voltar
+      </button>
+      <button id="modal-confirmar" type="button"
+        style="background:#c0392b; border:none; color:#fff; border-radius:999px;
+               padding:.4rem 1.3rem; cursor:pointer; font-size:.9rem; font-weight:600; transition:background .15s;"
+        onmouseover="this.style.background='#96281b'" onmouseout="this.style.background='#c0392b'">
+        Confirmar Cancelamento
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let _formPendente = null;
+
+  function pedirConfirmacao(form, nome) {
+    _formPendente = form;
+    document.getElementById('modal-nome').textContent = '«' + nome + '»';
+    const modal = document.getElementById('modal-cancelar');
+    modal.style.display = 'flex';
+  }
+
+  function fecharModal() {
+    _formPendente = null;
+    document.getElementById('modal-cancelar').style.display = 'none';
+  }
+
+  document.getElementById('modal-confirmar').addEventListener('click', function () {
+    if (_formPendente) _formPendente.submit();
+  });
+
+  document.getElementById('modal-cancelar').addEventListener('click', function (e) {
+    if (e.target === this) fecharModal();
+  });
+</script>
 </body>
 </html>
