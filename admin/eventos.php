@@ -68,7 +68,7 @@ $admin = getUtilizador();
     <div class="alert alert-success mb-2"><?= $msgs[$sucesso] ?></div>
     <?php endif; ?>
 
-    <form method="GET" action="admin-eventos.php" style="margin-bottom:1rem; display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap;">
+    <form method="GET" action="eventos.php" style="margin-bottom:1rem; display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap;">
       <div class="form-group" style="margin-bottom:0;">
         <label for="estado">Filtrar por estado</label>
         <select id="estado" name="estado" onchange="this.form.submit()">
