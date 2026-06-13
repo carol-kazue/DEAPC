@@ -121,8 +121,9 @@ sair(true, [
     'data_evento' => date('d M Y', strtotime($ev['data'])),
     'hora_evento' => substr($ev['hora'], 0, 5),
     'sala'        => $ev['sala'],
-    'nome_cliente'=> $nome_cli,
-    'total'       => $total,
+    'nome_cliente' => $nome_cli,
+    'email_cliente'=> $email_cli,
+    'total'        => $total,
     'metodo'      => $metodo_pag,
     'itens'       => $itensJSON,
 ], $isAjax, '../confirmacao.php?ref=' . urlencode($referencia));

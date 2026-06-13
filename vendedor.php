@@ -448,6 +448,23 @@ while ($p = $resP->fetchArray(SQLITE3_ASSOC)) {
       </div>
       <div id="vfase-recibo">
         <div class="vtkt-wrap"><div class="vtkt" id="vtkt-area"></div></div>
+        <!-- Enviar por email -->
+        <div id="vemail-section" style="padding:.2rem 1.5rem .5rem; border-top:1px solid #1e1e30; display:none;">
+          <p style="font-size:.73rem; color:#9e9080; margin:.45rem 0 .35rem; text-transform:uppercase; letter-spacing:.05em;">Enviar comprovativo por email</p>
+          <div style="display:flex; gap:.5rem; align-items:center;">
+            <input type="email" id="vemail-destino" placeholder="email@exemplo.com"
+              style="flex:1; border:1px solid #2a2a40; padding:.38rem .7rem; background:#0a0a18;
+                     color:#f0ece4; border-radius:3px; font-size:.82rem; outline:none; font-family:inherit;"
+              onfocus="this.style.borderColor='#c9a83c'" onblur="this.style.borderColor='#2a2a40'" />
+            <button type="button" onclick="vEnviarEmail()"
+              style="background:transparent; border:1px solid #3a5a8a; color:#7ab0e0;
+                     border-radius:999px; padding:.35rem .9rem; cursor:pointer;
+                     font-family:inherit; font-size:.8rem; white-space:nowrap;">
+              ✉ Enviar
+            </button>
+          </div>
+          <div id="vemail-status" style="display:none; font-size:.78rem; margin-top:.35rem;"></div>
+        </div>
         <div class="vsim-actions">
           <button class="vsim-btn-print" onclick="window.print()">Imprimir</button>
           <button class="vsim-btn-ok"    onclick="fecharVendaSim()">Fechar</button>
@@ -464,6 +481,27 @@ while ($p = $resP->fetchArray(SQLITE3_ASSOC)) {
 
   <script>
     const VMETODOS = { dinheiro:'Dinheiro', multibanco:'Multibanco', mbway:'MB Way', cartao:'Cartão' };
+    let _vRef = '';
+
+    function vEnviarEmail() {
+      const email  = document.getElementById('vemail-destino').value.trim();
+      const status = document.getElementById('vemail-status');
+      if (!email) return;
+      status.style.display = 'block';
+      status.style.color   = '#9e9080';
+      status.textContent   = 'A enviar…';
+      fetch('scripts/enviar_bilhete.php', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: new URLSearchParams({ referencia: _vRef, email: email })
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.ok) { status.style.color = '#52b37a'; status.textContent = '✓ Enviado para ' + email; }
+        else       { status.style.color = '#e05252'; status.textContent = d.erro || 'Erro ao enviar.'; }
+      })
+      .catch(function(){ status.style.color='#e05252'; status.textContent='Erro de ligação.'; });
+    }
     const VTIPOS   = { normal:'Normal', jovem:'Jovem (≤30)', senior:'Sénior (+65)' };
     const VDELAYS  = [500, 600, 550];
     let vFetchData = null, vAnimDone = false;
@@ -520,6 +558,10 @@ while ($p = $resP->fetchArray(SQLITE3_ASSOC)) {
     }
 
     function vMostrarRecibo(d) {
+      _vRef = d.referencia || '';
+      document.getElementById('vemail-destino').value      = d.email_cliente || '';
+      document.getElementById('vemail-status').style.display = 'none';
+      document.getElementById('vemail-section').style.display = 'block';
       let itensHtml = '';
       (d.itens || []).forEach(function(it) {
         const sub = parseFloat(it.preco_unitario) * parseInt(it.quantidade);

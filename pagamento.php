@@ -314,6 +314,27 @@
         </div>
       </div>
 
+      <!-- Enviar por email -->
+      <div id="email-section" style="padding:.2rem 1.6rem .6rem; border-top:1px solid #1e1e30; display:none;">
+        <p style="font-size:.75rem; color:#9e9080; margin:.5rem 0 .4rem; text-transform:uppercase; letter-spacing:.05em;">Enviar comprovativo por email</p>
+        <div style="display:flex; gap:.5rem; align-items:center;">
+          <input type="email" id="email-destino" placeholder="email@exemplo.com"
+            style="flex:1; border:1px solid #2a2a40; padding:.42rem .75rem; background:#0a0a18;
+                   color:#f0ece4; border-radius:3px; font-size:.85rem; outline:none;
+                   transition:border-color .15s; font-family:inherit;"
+            onfocus="this.style.borderColor='#c9a83c'" onblur="this.style.borderColor='#2a2a40'" />
+          <button type="button" onclick="enviarEmailComprovativo()"
+            style="background:transparent; border:1px solid #3a5a8a; color:#7ab0e0;
+                   border-radius:999px; padding:.38rem 1rem; cursor:pointer;
+                   font-family:inherit; font-size:.82rem; white-space:nowrap;
+                   transition:background .15s;"
+            onmouseover="this.style.background='#1a2535'" onmouseout="this.style.background='transparent'">
+            ✉ Enviar
+          </button>
+        </div>
+        <div id="email-status" style="display:none; font-size:.8rem; margin-top:.4rem;"></div>
+      </div>
+
       <!-- Erro -->
       <div id="sim-erro">
         <p id="sim-erro-msg"></p>
@@ -468,11 +489,49 @@
     document.getElementById('modal-sim').style.display = 'none';
   }
 
+  // ── Email ─────────────────────────────────────────────────────────────
+  let _ref = '';
+
+  function enviarEmailComprovativo() {
+    const email  = document.getElementById('email-destino').value.trim();
+    const status = document.getElementById('email-status');
+    if (!email) return;
+
+    status.style.display  = 'block';
+    status.style.color    = '#9e9080';
+    status.textContent    = 'A enviar…';
+
+    fetch('scripts/enviar_bilhete.php', {
+      method: 'POST',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      body: new URLSearchParams({ referencia: _ref, email: email })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.ok) {
+        status.style.color = '#52b37a';
+        status.textContent = '✓ Comprovativo enviado para ' + email;
+      } else {
+        status.style.color = '#e05252';
+        status.textContent = d.erro || 'Erro ao enviar email.';
+      }
+    })
+    .catch(function() {
+      status.style.color = '#e05252';
+      status.textContent = 'Erro de ligação.';
+    });
+  }
+
   // ── Comprovativo ──────────────────────────────────────────────────────
   const METODOS = { cartao:'Cartão de Crédito', multibanco:'Multibanco', mbway:'MB Way', dinheiro:'Dinheiro' };
   const TIPOS   = { normal:'Normal', jovem:'Jovem (≤30)', senior:'Sénior (+65)' };
 
   function mostrarRecibo(d) {
+    _ref = d.referencia || '';
+    document.getElementById('email-destino').value = d.email_cliente || '';
+    document.getElementById('email-status').style.display = 'none';
+    document.getElementById('email-section').style.display = 'block';
+
     let itensHtml = '';
     let total = 0;
     (d.itens || []).forEach(function(it) {
