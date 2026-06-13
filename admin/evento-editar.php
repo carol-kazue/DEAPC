@@ -191,7 +191,7 @@ $categorias = ['Sinfónico', 'Música Clássica', 'Música de Câmara', 'Jazz', 
     </form>
   </main>
 
-  <script src="scripts/validacao.js"></script>
+  <script src="../scripts/validacao.js"></script>
   <script>
     document.querySelector('form').addEventListener('submit', function (e) {
       let ok = true;
