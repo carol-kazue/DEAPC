@@ -1,7 +1,7 @@
 # Relatório Técnico — Sistema de Bilhética da Casa da Música
 
 **Unidade curricular:** Desenvolvimento de Aplicações para a Web (DEAPC)  
-**Grupo 18 — ESMAD / IPP**
+**Grupo 18 — ISEP / IPP**
 
 | Nome | Número |
 |------|--------|
