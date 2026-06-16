@@ -11,8 +11,9 @@ if ($id === 0) {
 }
 
 $db   = getDB();
+// MODIFICADO AQUI: Adicionado o campo 'imagem' no SELECT
 $stmt = $db->prepare(
-    'SELECT id, nome, descricao, data, hora, sala, categoria, classificacao_etaria, capacidade, estado
+    'SELECT id, nome, descricao, data, hora, sala, categoria, classificacao_etaria, capacidade, estado, imagem
      FROM eventos WHERE id = :id'
 );
 $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
@@ -36,6 +37,7 @@ $msgs_erro = [
     'campos_obrigatorios' => 'Preencha todos os campos obrigatórios.',
     'data_invalida'       => 'Data ou hora inválidas.',
     'capacidade_invalida' => 'Capacidade tem de ser um número positivo.',
+    'imagem_invalida'     => 'Formato de imagem inválido. Use apenas JPG, JPEG, PNG ou WEBP.', // Nova mensagem de erro
 ];
 $admin      = getUtilizador();
 $salas      = ['Sala Suggia', 'Sala 2', 'Grande Auditório', 'Terraço', 'Outro'];
@@ -70,7 +72,7 @@ $categorias = ['Sinfónico', 'Música Clássica', 'Música de Câmara', 'Jazz', 
     <div class="alert alert-danger mb-2"><?= $msgs_erro[$erro] ?></div>
     <?php endif; ?>
 
-    <form action="../scripts/editar_evento.php" method="POST">
+    <form action="../scripts/editar_evento.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="evento_id" value="<?= (int)$ev['id'] ?>" />
     <div class="form-card">
 
@@ -80,6 +82,20 @@ $categorias = ['Sinfónico', 'Música Clássica', 'Música de Câmara', 'Jazz', 
         <label for="nome">Título do evento *</label>
         <input type="text" id="nome" name="nome" required
                value="<?= htmlspecialchars($ev['nome']) ?>" />
+      </div>
+
+      <div class="form-group mb-2">
+        <label for="imagem">Imagem do Evento</label>
+        
+        <?php if (!empty($ev['imagem'])): ?>
+          <div class="foto-atual mb-1" style="margin-bottom: 10px;">
+            <p class="text-sm" style="color: #666; margin-bottom: 5px;">Imagem atual:</p>
+            <img src="../<?= htmlspecialchars($ev['imagem']) ?>" alt="Imagem do Evento" style="max-width: 150px; border-radius: 4px; display: block;" />
+          </div>
+        <?php endif; ?>
+
+        <input type="file" id="imagem" name="imagem" accept="image/*" />
+        <p class="text-sm" style="color: #777; margin-top: 4px;">Deixe em branco para manter a imagem atual. (Apenas JPG, PNG ou WEBP)</p>
       </div>
 
       <div class="form-row">

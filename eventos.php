@@ -40,7 +40,8 @@ $pagina      = min($pagina, $total_pag);
 $offset      = ($pagina - 1) * $por_pag;
 
 // Eventos da página atual
-$sql = "SELECT e.id, e.nome, e.data, e.hora, e.sala, e.categoria,
+// Modifica as linhas 37 a 44 para incluir "e.imagem":
+$sql = "SELECT e.id, e.nome, e.data, e.hora, e.sala, e.categoria, e.imagem,
                MIN(p.preco) AS preco_min
         FROM eventos e
         LEFT JOIN precos p ON p.evento_id = e.id
@@ -195,7 +196,13 @@ function urlPag(int $p, string $pesquisa, string $data_de, string $data_ate, str
     <div class="cards-grid" id="grelha-eventos">
       <?php foreach ($eventos as $ev): ?>
       <div class="card">
-        <div class="img-box img-box-md"></div>
+        <div class="img-box img-box-md">
+        <?php if (!empty($ev['imagem'])): ?>
+         <img src="<?= htmlspecialchars($ev['imagem']) ?>" alt="<?= htmlspecialchars($ev['nome']) ?>" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        <?php else: ?>
+        <div style="width: 100%; height: 100%; background: #2a2a3a; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #666;">Sem Foto</div>
+      <?php endif; ?>
+</div>
         <p class="card-title"><?= htmlspecialchars($ev['nome']) ?></p>
         <p class="card-meta">
           <?= htmlspecialchars(date('d M Y', strtotime($ev['data']))) ?>
