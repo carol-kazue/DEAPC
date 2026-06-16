@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "bmewburn.vscode-intelephense-client",
+    "xdebug.php-debug",
+    "qwtel.sqlite-viewer",
+    "ecmel.vscode-html-css",
+    "esbenp.prettier-vscode",
+    "eamodio.gitlens"
+  ]
+}

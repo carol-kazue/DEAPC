@@ -1,0 +1,13 @@
+{
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/*.db-shm": true,
+    "**/*.db-wal": true
+  },
+  "[php]": {
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+  },
+  "[html][css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
