@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$evento_id           = (int)($_POST['evento_id']          ?? 0);
+$evento_id           = (int)($_POST['evento_id']           ?? 0);
 $nome                = trim($_POST['nome']                 ?? '');
 $data                = trim($_POST['data']                 ?? '');
 $hora                = trim($_POST['hora']                 ?? '');
@@ -35,15 +35,57 @@ if (!in_array($estado, ['publicado', 'rascunho', 'cancelado'])) {
     $estado = 'rascunho';
 }
 
+// ==========================================
+// ADICIONADO: LOGICA DE UPLOAD DA IMAGEM
+// ==========================================
+$caminho_imagem_db = null; 
+
+if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+    // Como este script roda dentro da pasta "scripts/", a pasta uploads fica um nível acima
+    $pasta_destino = '../uploads/'; 
+    
+    if (!is_dir($pasta_destino)) {
+        mkdir($pasta_destino, 0755, true);
+    }
+
+    $extensao = strtolower(pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION));
+    
+    if (in_array($extensao, ['jpg', 'jpeg', 'png', 'webp'])) {
+        $novo_nome_arquivo = 'evento_' . $evento_id . '_' . time() . '.' . $extensao;
+        $caminho_completo = $pasta_destino . $novo_nome_arquivo;
+
+        if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminho_completo)) {
+            // Caminho relativo salvo no banco (utilizado para carregar a imagem na interface)
+            $caminho_imagem_db = 'uploads/' . $novo_nome_arquivo;
+        }
+    } else {
+        header('Location: ../admin/evento-editar.php?id=' . $evento_id . '&erro=imagem_invalida');
+        exit;
+    }
+}
+// ==========================================
+
 $db = getDB();
 $db->exec('BEGIN');
 
-$upd = $db->prepare(
-    'UPDATE eventos SET nome = :nome, descricao = :desc, data = :data, hora = :hora,
-     sala = :sala, categoria = :cat, classificacao_etaria = :clas,
-     capacidade = :cap, estado = :estado
-     WHERE id = :id'
-);
+// ADICIONADO: Se houver uma imagem nova, inclui o campo no UPDATE. Caso contrário, mantém a query original.
+if ($caminho_imagem_db !== null) {
+    $upd = $db->prepare(
+        'UPDATE eventos SET nome = :nome, descricao = :desc, data = :data, hora = :hora,
+         sala = :sala, categoria = :cat, classificacao_etaria = :clas,
+         capacidade = :cap, estado = :estado, imagem = :imagem
+         WHERE id = :id'
+    );
+    $upd->bindValue(':imagem', $caminho_imagem_db, SQLITE3_TEXT);
+} else {
+    $upd = $db->prepare(
+        'UPDATE eventos SET nome = :nome, descricao = :desc, data = :data, hora = :hora,
+         sala = :sala, categoria = :cat, classificacao_etaria = :clas,
+         capacidade = :cap, estado = :estado
+         WHERE id = :id'
+    );
+}
+
 $upd->bindValue(':nome',   $nome,                 SQLITE3_TEXT);
 $upd->bindValue(':desc',   $descricao ?: null,     $descricao ? SQLITE3_TEXT : SQLITE3_NULL);
 $upd->bindValue(':data',   $data,                 SQLITE3_TEXT);

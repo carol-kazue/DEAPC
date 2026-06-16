@@ -8,7 +8,7 @@ $db = getDB();
 
 $filtro_estado = trim($_GET['estado'] ?? '');
 
-$sql = 'SELECT e.id, e.nome, e.data, e.hora, e.sala, e.categoria, e.capacidade, e.estado,
+$sql = 'SELECT e.id, e.nome, e.data, e.hora, e.sala, e.categoria, e.capacidade, e.estado, e.imagem,
                COALESCE(SUM(ic.quantidade),0) AS vendidos
         FROM eventos e
         LEFT JOIN compras c ON c.evento_id = e.id AND c.estado = \'confirmado\'
@@ -86,6 +86,7 @@ $admin = getUtilizador();
         <thead>
           <tr>
             <th>ID</th>
+            <th>Imagem</th> 
             <th>Título</th>
             <th>Data</th>
             <th>Sala</th>
@@ -99,6 +100,15 @@ $admin = getUtilizador();
           <?php foreach ($eventos as $ev): ?>
           <tr>
             <td>#<?= (int)$ev['id'] ?></td>
+            
+            <td>
+              <?php if (!empty($ev['imagem'])): ?>
+                <img src="../<?= htmlspecialchars($ev['imagem']) ?>" alt="Capa" style="width: 50px; height: 35px; object-fit: cover; border-radius: 4px; display: block;" />
+              <?php else: ?>
+                <div style="width: 50px; height: 35px; background: #2a2a3a; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #666;">S/ Foto</div>
+              <?php endif; ?>
+            </td>
+
             <td><?= htmlspecialchars($ev['nome']) ?></td>
             <td><?= htmlspecialchars(date('d M Y', strtotime($ev['data']))) ?></td>
             <td><?= htmlspecialchars($ev['sala']) ?></td>
@@ -122,8 +132,6 @@ $admin = getUtilizador();
     </div>
   </main>
 
-
-<!-- Modal de confirmação de cancelamento -->
 <div id="modal-cancelar" style="display:none; position:fixed; inset:0; z-index:500;
      background:rgba(0,0,0,.75); backdrop-filter:blur(3px);
      align-items:center; justify-content:center;">
