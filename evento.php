@@ -9,8 +9,9 @@ if ($id === 0) {
 }
 
 $db   = getDB();
+// ATUALIZADO: Incluído o campo 'imagem' no SELECT da tabela eventos
 $stmt = $db->prepare(
-    'SELECT id, nome, descricao, data, hora, sala, categoria, classificacao_etaria, capacidade
+    'SELECT id, nome, descricao, data, hora, sala, categoria, classificacao_etaria, capacidade, imagem
      FROM eventos WHERE id = :id AND estado = \'publicado\''
 );
 $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
@@ -73,7 +74,13 @@ $preco_min = $precos ? min($precos) : null;
 
     <p class="text-sm mb-2"><a href="eventos.php">← Eventos</a></p>
 
-    <div class="img-box img-box-lg mb-2"></div>
+    <div class="img-box img-box-lg mb-2">
+      <?php if (!empty($ev['imagem'])): ?>
+        <img src="<?= htmlspecialchars($ev['imagem']) ?>" alt="<?= htmlspecialchars($ev['nome']) ?>" style="width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 6px;" />
+      <?php else: ?>
+        <div style="width: 100%; height: 100%; background: #2a2a3a; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #666;">Sem imagem de capa</div>
+      <?php endif; ?>
+    </div>
 
     <div class="detail-grid">
 
