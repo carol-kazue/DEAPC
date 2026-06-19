@@ -43,7 +43,7 @@ if ($referencia !== '') {
 
   <nav>
     <div class="nav-left">
-      <a href="index.html" class="nav-brand">Casa da Música</a>
+      <a href="index.php" class="nav-brand">Casa da Música</a>
       <a href="eventos.php" class="btn-pill">Eventos</a>
     </div>
   </nav>
@@ -91,6 +91,53 @@ if ($referencia !== '') {
       <a href="cliente.php" class="btn btn-pill-light">Ver Histórico</a>
       <a href="eventos.php" class="btn">Mais Eventos</a>
     </div>
+
+    <div style="margin-top:1.5rem; background:#12121f; border:1px solid #252535;
+                border-radius:4px; padding:1rem 1.2rem; max-width:420px; margin-left:auto; margin-right:auto;">
+      <p style="font-size:.78rem; color:#9e9080; text-transform:uppercase;
+                letter-spacing:.05em; margin:0 0 .6rem;">Enviar comprovativo por email</p>
+      <div style="display:flex; gap:.5rem; align-items:center;">
+        <input type="email" id="email-conf" placeholder="email@exemplo.com"
+          value="<?= htmlspecialchars($compra['email_cliente']) ?>"
+          style="flex:1; border:1px solid #2a2a40; padding:.45rem .8rem; background:#0f0f20;
+                 color:#f0ece4; border-radius:3px; font-size:.88rem; outline:none; font-family:inherit;"
+          onfocus="this.style.borderColor='#c9a83c'" onblur="this.style.borderColor='#2a2a40'" />
+        <button type="button" onclick="enviarEmailConf()"
+          style="background:transparent; border:1px solid #3a5a8a; color:#7ab0e0;
+                 border-radius:999px; padding:.42rem 1rem; cursor:pointer;
+                 font-family:inherit; font-size:.85rem; white-space:nowrap;
+                 transition:background .15s;"
+          onmouseover="this.style.background='#1a2535'" onmouseout="this.style.background='transparent'">
+          ✉ Enviar
+        </button>
+      </div>
+      <div id="email-conf-status" style="display:none; font-size:.82rem; margin-top:.4rem;"></div>
+    </div>
+
+    <script>
+    function enviarEmailConf() {
+      const email  = document.getElementById('email-conf').value.trim();
+      const status = document.getElementById('email-conf-status');
+      if (!email) return;
+      status.style.display = 'block';
+      status.style.color   = '#9e9080';
+      status.textContent   = 'A enviar…';
+      fetch('scripts/enviar_bilhete.php', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: new URLSearchParams({
+          referencia: '<?= htmlspecialchars(addslashes($compra['referencia'])) ?>',
+          email: email
+        })
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.ok) { status.style.color = '#52b37a'; status.textContent = '✓ Comprovativo enviado para ' + email; }
+        else       { status.style.color = '#e05252'; status.textContent = d.erro || 'Erro ao enviar.'; }
+      })
+      .catch(function(){ status.style.color='#e05252'; status.textContent='Erro de ligação.'; });
+    }
+    </script>
 
     <?php endif; ?>
   </main>
