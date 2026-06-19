@@ -51,7 +51,7 @@ nav {
 .btn-pill-light:hover { background: #3a3a55; color: #f0ece4; }
 
 /* ── PAGE WRAPPER ── */
-.page       { padding: 2rem 4rem; max-width: 1200px; margin: 0 auto; }
+.page       { padding: 2rem 4rem; max-width: 1500px; margin: 0 auto; }
 .page-title {
   font-family: 'Cinzel', Georgia, serif;
   font-size: 1.5rem;
@@ -96,7 +96,7 @@ nav {
 .sec-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 
 /* ── TABLES ── */
-.table-wrap { overflow-x: auto; }
+.table-wrap { overflow-x: auto; scrollbar-color: #3a3a55 #12121f; scrollbar-width: thin; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 0.6rem 0.9rem; text-align: left; border-bottom: 1px solid #1e1e30; font-size: 0.88rem; }
 th { background: #181828; font-weight: 600; white-space: nowrap; color: #c9a83c; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
